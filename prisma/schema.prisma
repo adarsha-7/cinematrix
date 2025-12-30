@@ -27,7 +27,7 @@ model User {
 // MOVIE
 //////////////////////
 model Movie {
-  id               Int      @id
+  id               Int       @id
   title            String
   originalTitle    String
   overview         String?
@@ -37,7 +37,7 @@ model Movie {
   runtime          Int?
   budget           Int?
   revenue          Int?
-  adult            Boolean  @default(false)
+  adult            Boolean   @default(false)
   homepage         String?
   imdbId           String?
   originalLanguage String
@@ -47,16 +47,13 @@ model Movie {
   posterPath       String?
   backdropPath     String?
 
-  ratingAverage    Float?
-  ratingCount      Int?
-
   genres              MovieGenre[]
   keywords            MovieKeyword[]
   spokenLanguages     MovieSpokenLanguage[]
   productionCompanies MovieProductionCompany[]
   productionCountries MovieProductionCountry[]
   cast                MovieCast[]
-  crew                MovieCrew[]
+  director            MovieDirector[]
 
   ratings       Rating[]
   featureVector MovieFeature?
@@ -69,7 +66,7 @@ model Movie {
 // TV SHOW
 //////////////////////
 model TVShow {
-  id               Int      @id
+  id               Int       @id
   name             String
   originalName     String
   overview         String?
@@ -91,6 +88,9 @@ model TVShow {
   posterPath       String?
   backdropPath     String?
 
+  ratingAverage Float?
+  ratingCount   Int?
+
   genres              TVShowGenre[]
   spokenLanguages     TVShowSpokenLanguage[]
   productionCompanies TVShowProductionCompany[]
@@ -103,7 +103,7 @@ model TVShow {
 // PERSON
 //////////////////////
 model Person {
-  id                 Int      @id
+  id                 Int     @id
   name               String
   originalName       String
   knownForDepartment String
@@ -112,17 +112,17 @@ model Person {
   popularity         Float?
   profilePath        String?
 
-  movieCast  MovieCast[]
-  movieCrew  MovieCrew[]
-  tvShowCast TVShowCast[]
+  movieCast     MovieCast[]
+  movieDirector MovieDirector[]
+  tvShowCast    TVShowCast[]
 }
 
 //////////////////////
 // GENRES
 //////////////////////
 model Genre {
-  id     Int    @id
-  name   String
+  id   Int    @id
+  name String
 
   movies  MovieGenre[]
   tvShows TVShowGenre[]
@@ -142,8 +142,8 @@ model TVShowGenre {
   tvShow   TVShow @relation(fields: [tvShowId], references: [id])
   tvShowId Int
 
-  genre    Genre @relation(fields: [genreId], references: [id])
-  genreId  Int
+  genre   Genre @relation(fields: [genreId], references: [id])
+  genreId Int
 
   @@id([tvShowId, genreId])
 }
@@ -152,8 +152,8 @@ model TVShowGenre {
 // KEYWORDS
 //////////////////////
 model Keyword {
-  id     Int    @id
-  name   String
+  id   Int    @id
+  name String
 
   movies MovieKeyword[]
 }
@@ -162,7 +162,7 @@ model MovieKeyword {
   movie   Movie @relation(fields: [movieId], references: [id])
   movieId Int
 
-  keyword Keyword @relation(fields: [keywordId], references: [id])
+  keyword   Keyword @relation(fields: [keywordId], references: [id])
   keywordId Int
 
   @@id([movieId, keywordId])
@@ -172,16 +172,16 @@ model MovieKeyword {
 // LANGUAGES
 //////////////////////
 model Language {
-  code  String @id
-  name  String
+  code String @id
+  name String
 
   movies  MovieSpokenLanguage[]
   tvShows TVShowSpokenLanguage[]
 }
 
 model MovieSpokenLanguage {
-  movie        Movie    @relation(fields: [movieId], references: [id])
-  movieId      Int
+  movie   Movie @relation(fields: [movieId], references: [id])
+  movieId Int
 
   language     Language @relation(fields: [languageCode], references: [code])
   languageCode String
@@ -190,8 +190,8 @@ model MovieSpokenLanguage {
 }
 
 model TVShowSpokenLanguage {
-  tvShow       TVShow   @relation(fields: [tvShowId], references: [id])
-  tvShowId     Int
+  tvShow   TVShow @relation(fields: [tvShowId], references: [id])
+  tvShowId Int
 
   language     Language @relation(fields: [languageCode], references: [code])
   languageCode String
@@ -203,16 +203,16 @@ model TVShowSpokenLanguage {
 // PRODUCTION
 //////////////////////
 model ProductionCompany {
-  id     Int    @id
-  name   String
+  id   Int    @id
+  name String
 
   movies  MovieProductionCompany[]
   tvShows TVShowProductionCompany[]
 }
 
 model MovieProductionCompany {
-  movie     Movie             @relation(fields: [movieId], references: [id])
-  movieId   Int
+  movie   Movie @relation(fields: [movieId], references: [id])
+  movieId Int
 
   company   ProductionCompany @relation(fields: [companyId], references: [id])
   companyId Int
@@ -221,8 +221,8 @@ model MovieProductionCompany {
 }
 
 model TVShowProductionCompany {
-  tvShow    TVShow            @relation(fields: [tvShowId], references: [id])
-  tvShowId  Int
+  tvShow   TVShow @relation(fields: [tvShowId], references: [id])
+  tvShowId Int
 
   company   ProductionCompany @relation(fields: [companyId], references: [id])
   companyId Int
@@ -231,29 +231,29 @@ model TVShowProductionCompany {
 }
 
 model ProductionCountry {
-  id     Int    @id
-  name   String
+  id   Int    @id
+  name String
 
   movies  MovieProductionCountry[]
   tvShows TVShowProductionCountry[]
 }
 
 model MovieProductionCountry {
-  movie      Movie             @relation(fields: [movieId], references: [id])
-  movieId    Int
+  movie   Movie @relation(fields: [movieId], references: [id])
+  movieId Int
 
-  country    ProductionCountry @relation(fields: [countryId], references: [id])
-  countryId  Int
+  country   ProductionCountry @relation(fields: [countryId], references: [id])
+  countryId Int
 
   @@id([movieId, countryId])
 }
 
 model TVShowProductionCountry {
-  tvShow     TVShow            @relation(fields: [tvShowId], references: [id])
-  tvShowId   Int
+  tvShow   TVShow @relation(fields: [tvShowId], references: [id])
+  tvShowId Int
 
-  country    ProductionCountry @relation(fields: [countryId], references: [id])
-  countryId  Int
+  country   ProductionCountry @relation(fields: [countryId], references: [id])
+  countryId Int
 
   @@id([tvShowId, countryId])
 }
@@ -262,57 +262,57 @@ model TVShowProductionCountry {
 // NETWORKS
 //////////////////////
 model Network {
-  id      Int         @id
+  id      Int             @id
   name    String
   tvShows TVShowNetwork[]
 }
 
 model TVShowNetwork {
-  tvShow    TVShow   @relation(fields: [tvShowId], references: [id])
-  tvShowId  Int
+  tvShow   TVShow @relation(fields: [tvShowId], references: [id])
+  tvShowId Int
 
-  network   Network  @relation(fields: [networkId], references: [id])
+  network   Network @relation(fields: [networkId], references: [id])
   networkId Int
 
   @@id([tvShowId, networkId])
 }
 
 //////////////////////
-// CAST & CREW
+// CAST & DIRECTOR
 //////////////////////
 model MovieCast {
-  movie     Movie  @relation(fields: [movieId], references: [id])
-  movieId   Int
+  movie   Movie @relation(fields: [movieId], references: [id])
+  movieId Int
 
-  person    Person @relation(fields: [personId], references: [id])
-  personId  Int
+  person   Person @relation(fields: [personId], references: [id])
+  personId Int
 
+  castId    Int
   character String?
   castOrder Int?
 
   @@id([movieId, personId])
 }
 
-model MovieCrew {
-  movie     Movie  @relation(fields: [movieId], references: [id])
-  movieId   Int
+model MovieDirector {
+  movie   Movie @relation(fields: [movieId], references: [id])
+  movieId Int
 
-  person    Person @relation(fields: [personId], references: [id])
-  personId  Int
+  person   Person @relation(fields: [personId], references: [id])
+  personId Int
 
-  job       String
-
-  @@id([movieId, personId, job])
+  @@id([movieId, personId])
 }
 
 model TVShowCast {
-  tvShow    TVShow @relation(fields: [tvShowId], references: [id])
-  tvShowId  Int
+  tvShow   TVShow @relation(fields: [tvShowId], references: [id])
+  tvShowId Int
 
-  person    Person @relation(fields: [personId], references: [id])
-  personId  Int
+  person   Person @relation(fields: [personId], references: [id])
+  personId Int
 
   character String?
+  castOrder Int?
 
   @@id([tvShowId, personId])
 }
@@ -321,8 +321,8 @@ model TVShowCast {
 // RECOMMENDATION
 //////////////////////
 model MovieFeature {
-  movieId      Int     @id
-  movie        Movie   @relation(fields: [movieId], references: [id])
+  movieId       Int      @id
+  movie         Movie    @relation(fields: [movieId], references: [id])
   featureVector Bytes
   modelVersion  String
   createdAt     DateTime @default(now())
@@ -332,11 +332,11 @@ model MovieFeature {
 // USER FEEDBACK
 //////////////////////
 model Rating {
-  id        String  @id @default(uuid())
-  user      User    @relation(fields: [userId], references: [id])
-  userId    String
-  movie     Movie   @relation(fields: [movieId], references: [id])
-  movieId   Int
+  id      String @id @default(uuid())
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String
+  movie   Movie  @relation(fields: [movieId], references: [id])
+  movieId Int
 
   rating    Int
   createdAt DateTime @default(now())
@@ -345,22 +345,22 @@ model Rating {
 }
 
 model Watchlist {
-  id      String @id @default(uuid())
-  user    User   @relation(fields: [userId], references: [id])
-  userId  String
-  name    String
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  name   String
 
-  movies  WatchlistMovie[]
+  movies WatchlistMovie[]
 }
 
 model WatchlistMovie {
   watchlist   Watchlist @relation(fields: [watchlistId], references: [id])
   watchlistId String
 
-  movie       Movie     @relation(fields: [movieId], references: [id])
-  movieId     Int
+  movie   Movie @relation(fields: [movieId], references: [id])
+  movieId Int
 
-  addedAt     DateTime  @default(now())
+  addedAt DateTime @default(now())
 
   @@id([watchlistId, movieId])
 }
@@ -376,13 +376,13 @@ enum InteractionType {
 }
 
 model UserInteraction {
-  id        String           @id @default(uuid())
-  user      User             @relation(fields: [userId], references: [id])
-  userId    String
-  movie     Movie            @relation(fields: [movieId], references: [id])
-  movieId   Int
+  id      String @id @default(uuid())
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String
+  movie   Movie  @relation(fields: [movieId], references: [id])
+  movieId Int
 
   type      InteractionType
-  value     Int?             
-  createdAt DateTime         @default(now())
+  value     Int?
+  createdAt DateTime        @default(now())
 }

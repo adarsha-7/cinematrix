@@ -115,8 +115,8 @@ model TVShow {
 model Person {
   id                 Int      @id
   name               String
-  originalName       String
-  knownForDepartment String
+  originalName       String?
+  knownForDepartment String?
   gender             Int?
   adult              Boolean?
   popularity         Float?

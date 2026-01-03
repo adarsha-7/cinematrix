@@ -4,7 +4,7 @@ import path from 'path';
 import csv from 'csv-parser';
 
 async function main() {
-    const filePath = path.join(process.cwd(), 'datasets/keywords.csv');
+    const filePath = path.join(process.cwd(), 'datasets/networks.csv');
     const records: { name: string }[] = [];
 
     await new Promise<void>((resolve, reject) => {
@@ -25,7 +25,7 @@ async function main() {
         return;
     }
 
-    const result = await prisma.keyword.createMany({
+    const result = await prisma.network.createMany({
         data: records,
         skipDuplicates: true,
     });

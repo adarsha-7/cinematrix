@@ -4,14 +4,14 @@ import path from 'path';
 import csv from 'csv-parser';
 
 async function main() {
-    const filePath = path.join(process.cwd(), 'datasets/keywords.csv');
-    const records: { name: string }[] = [];
+    const filePath = path.join(process.cwd(), 'datasets/languages.csv');
+    const records: { code: string; name: string }[] = [];
 
     await new Promise<void>((resolve, reject) => {
         fs.createReadStream(filePath)
             .pipe(csv())
             .on('data', (row) => {
-                records.push({ name: row.name });
+                records.push({ code: row.code, name: row.name });
             })
             .on('end', () => {
                 console.log(`Parsed ${records.length} rows from CSV.`);
@@ -25,7 +25,7 @@ async function main() {
         return;
     }
 
-    const result = await prisma.keyword.createMany({
+    const result = await prisma.language.createMany({
         data: records,
         skipDuplicates: true,
     });

@@ -113,12 +113,12 @@ model TVShow {
 // PERSON
 //////////////////////
 model Person {
-  id                 Int     @id
+  id                 Int      @id
   name               String
   originalName       String
   knownForDepartment String
   gender             Int?
-  adult              Boolean
+  adult              Boolean?
   popularity         Float?
   profilePath        String?
 
@@ -128,7 +128,7 @@ model Person {
 }
 
 model Creator {
-  id   Int    @id
+  id   Int    @id @default(autoincrement())
   name String
 
   tvShowCreator TVShowCreator[]
@@ -138,7 +138,7 @@ model Creator {
 // GENRES
 //////////////////////
 model Genre {
-  id   Int    @id
+  id   Int    @id @default(autoincrement())
   name String
 
   movies  MovieGenre[]
@@ -197,7 +197,7 @@ model Language {
   tvshowOriginalLanguages TVShowOriginalLanguage[]
 }
 
-model spokenLanguage {
+model SpokenLanguage {
   id   Int    @id @default(autoincrement())
   name String
 
@@ -209,7 +209,7 @@ model MovieSpokenLanguage {
   movie   Movie @relation(fields: [movieId], references: [id])
   movieId Int
 
-  language   spokenLanguage @relation(fields: [languageId], references: [id])
+  language   SpokenLanguage @relation(fields: [languageId], references: [id])
   languageId Int
 
   @@id([movieId, languageId])
@@ -229,7 +229,7 @@ model TVShowSpokenLanguage {
   tvShow   TVShow @relation(fields: [tvShowId], references: [id])
   tvShowId Int
 
-  language   spokenLanguage @relation(fields: [languageId], references: [id])
+  language   SpokenLanguage @relation(fields: [languageId], references: [id])
   languageId Int
 
   @@id([tvShowId, languageId])
@@ -259,7 +259,7 @@ model TVShowLanguage {
 // PRODUCTION
 //////////////////////
 model ProductionCompany {
-  id   Int    @id
+  id   Int    @id @default(autoincrement())
   name String
 
   movies  MovieProductionCompany[]
@@ -287,7 +287,7 @@ model TVShowProductionCompany {
 }
 
 model ProductionCountry {
-  id   Int    @id
+  id   Int    @id @default(autoincrement())
   name String
 
   movies  MovieProductionCountry[]
@@ -295,7 +295,7 @@ model ProductionCountry {
 }
 
 model OriginCountry {
-  id   Int    @id
+  code String @id
   name String
 
   tvShows TVShowOriginCountry[]
@@ -325,18 +325,19 @@ model TVShowOriginCountry {
   tvShow   TVShow @relation(fields: [tvShowId], references: [id])
   tvShowId Int
 
-  country   OriginCountry @relation(fields: [countryId], references: [id])
-  countryId Int
+  country     OriginCountry @relation(fields: [countryCode], references: [code])
+  countryCode String
 
-  @@id([tvShowId, countryId])
+  @@id([tvShowId, countryCode])
 }
 
 //////////////////////
 // NETWORKS
 //////////////////////
 model Network {
-  id      Int             @id
-  name    String
+  id   Int    @id @default(autoincrement())
+  name String
+
   tvShows TVShowNetwork[]
 }
 

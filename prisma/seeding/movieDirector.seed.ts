@@ -4,39 +4,23 @@ import path from 'path';
 import csv from 'csv-parser';
 
 async function main() {
-    const filePath = path.join(process.cwd(), 'datasets/person.csv');
-
-    const records: {
-        adult: boolean;
-        gender?: number;
-        id: number;
-        knownForDepartment: string;
-        name: string;
-        originalName: string;
-        popularity?: number;
-        profilePath?: string;
-    }[] = [];
+    const filePath = path.join(process.cwd(), 'datasets/movie_director.csv');
+    const records: { movieId: number; personId: number }[] = [];
 
     await new Promise<void>((resolve, reject) => {
         fs.createReadStream(filePath)
             .pipe(csv())
             .on('data', (row) => {
                 records.push({
-                    id: Number(row.id),
-                    adult: row.adult === 'True',
-                    gender: row.gender ? Number(row.gender) : undefined,
-                    knownForDepartment: row.knownForDepartment,
-                    name: row.name,
-                    originalName: row.originalName,
-                    popularity: row.popularity ? Number(row.popularity) : undefined,
-                    profilePath: row.profilePath || undefined,
+                    movieId: Number(row.movieId),
+                    personId: Number(row.personId),
                 });
             })
             .on('end', () => {
                 console.log(`Parsed ${records.length} rows from CSV.`);
                 resolve();
             })
-            .on('error', reject);
+            .on('error', (err) => reject(err));
     });
 
     if (records.length === 0) {
@@ -44,7 +28,7 @@ async function main() {
         return;
     }
 
-    const result = await prisma.person.createMany({
+    const result = await prisma.movieDirector.createMany({
         data: records,
         skipDuplicates: true,
     });

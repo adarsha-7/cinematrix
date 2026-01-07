@@ -64,7 +64,7 @@ model Movie {
   ratings       Rating[]
   interactions  UserInteraction[]
   watchlists    WatchlistMovie[]
-  featureVector MovieFeature?
+  featureVector MovieFeatureVector?
 }
 
 //////////////////////
@@ -404,12 +404,24 @@ model TVShowCreator {
 //////////////////////
 // RECOMMENDATION
 //////////////////////
-model MovieFeature {
-  movieId       Int      @id
-  movie         Movie    @relation(fields: [movieId], references: [id])
-  featureVector Bytes
-  modelVersion  String
-  createdAt     DateTime @default(now())
+model MovieFeatureVector {
+  movieId Int   @id
+  movie   Movie @relation(fields: [movieId], references: [id])
+
+  overview         Bytes?
+  tagline          Bytes?
+  genres           Bytes?
+  keywords         Bytes?
+  cast             Bytes?
+  director         Bytes?
+  runtime          Bytes?
+  voteCount        Bytes?
+  originalLanguage Bytes?
+
+  combinedVector Bytes?
+
+  modelVersion String?
+  createdAt    DateTime @default(now())
 }
 
 model TVShowFeature {

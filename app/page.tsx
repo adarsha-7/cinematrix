@@ -1,11 +1,3 @@
-import Aboutpage from './about/page';
-import Navbar from './components/Navbar';
-import CineMatrixNavbar from './components/Navbar';
-import Homepage from './home/page';
-import LoginupPage from './login/page';
-import Moviepage from './movie/page';
-import SignupPage from './signup/page';
-
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default async function Home() {

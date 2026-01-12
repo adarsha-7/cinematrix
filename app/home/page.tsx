@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Play } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footercomponent from '../components/Footer';
@@ -30,12 +31,16 @@ export default function Homepage() {
                     </p>
 
                     <div className="mt-8 flex justify-center gap-4">
-                        <button className="flex items-center gap-2 rounded-md bg-red-600 px-6 py-2 hover:cursor-pointer hover:bg-red-700">
-                            <Play size={16} /> Movies
-                        </button>
-                        <button className="flex items-center gap-2 rounded-md bg-red-600 px-6 py-2 hover:cursor-pointer hover:bg-red-700">
-                            <Play size={16} /> TV Shows
-                        </button>
+                        <Link href="/movies">
+                            <button className="flex items-center gap-2 rounded-md bg-red-600 px-6 py-2 hover:cursor-pointer hover:bg-red-700">
+                                <Play size={16} /> Movies
+                            </button>
+                        </Link>
+                        <Link href="/tv-shows">
+                            <button className="flex items-center gap-2 rounded-md bg-red-600 px-6 py-2 hover:cursor-pointer hover:bg-red-700">
+                                <Play size={16} /> TV Shows
+                            </button>
+                        </Link>
                     </div>
                 </section>
 
@@ -46,8 +51,8 @@ export default function Homepage() {
                     <div
                         className={
                             showAll
-                                ? 'scrollbar-hide grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4'
-                                : 'scrollbar-hide flex gap-6 overflow-x-auto pb-6'
+                                ? 'scrollbar-hide grid grid-cols-2 gap-6 py-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'
+                                : 'scrollbar-hide flex gap-6 overflow-x-auto py-2 pb-6'
                         }
                     >
                         {moviesData.recommended.map((movie) => (

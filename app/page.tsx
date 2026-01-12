@@ -1,10 +1,10 @@
-import Aboutpage from "./About/Aboutpage";
-import Navbar from "./components/navbar";
-import CineMatrixNavbar from "./components/navbar";
-import Homepage from "./home/page";
-import LoginupPage from "./Login/Loginpage";
-import Moviepage from "./Moviepage/moviepage";
-import SignupPage from "./Signup/Signuppage";
+import Aboutpage from './about/page';
+import Navbar from './components/Navbar';
+import CineMatrixNavbar from './components/Navbar';
+import Homepage from './home/page';
+import LoginupPage from './login/page';
+import Moviepage from './movie/page';
+import SignupPage from './signup/page';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -13,6 +13,9 @@ export default async function Home() {
     const { aboutText } = await res.json();
 
     return (
-        <Homepage />
+        <main className="flex flex-col items-center gap-10">
+            <h1 className="mt-5 text-center text-3xl">Welcome To Cinematrix!</h1>
+            <p className="w-100 text-center text-lg">{aboutText}</p>
+        </main>
     );
 }

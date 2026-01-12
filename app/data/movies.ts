@@ -1,0 +1,131 @@
+import type { Movie, Category } from '../types/index';
+
+const moviesData: {
+    recommended: Movie[];
+    categories: Category[];
+} = {
+    recommended: [
+        {
+            id: 1,
+            title: 'Inception',
+            genre: 'Sci-Fi',
+            rating: 8.8,
+            releaseDate: 2010,
+            image: 'https://image.tmdb.org/t/p/w500/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg',
+        },
+        {
+            id: 2,
+            title: 'Titanic',
+            genre: 'Romance',
+            rating: 7.9,
+            releaseDate: 1997,
+            image: 'https://image.tmdb.org/t/p/w500/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg',
+        },
+        {
+            id: 3,
+            title: 'Forrest Gump',
+            genre: 'Drama',
+            rating: 8.8,
+            releaseDate: 1994,
+            image: 'https://image.tmdb.org/t/p/w500/saHP97rTPS5eLmrLQEcANmKrsFl.jpg',
+        },
+        {
+            id: 4,
+            title: 'Dune',
+            genre: 'Sci-Fi',
+            rating: 8.0,
+            releaseDate: 2021,
+            image: 'https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg',
+        },
+        {
+            id: 5,
+            title: 'The Conjuring',
+            genre: 'Horror',
+            rating: 7.5,
+            releaseDate: 2013,
+            image: 'https://image.tmdb.org/t/p/w500/wVYREutTvI2tmxr6ujrHT704wGF.jpg',
+        },
+        {
+            id: 6,
+            title: 'Get Out',
+            genre: 'Horror',
+            rating: 7.8,
+            releaseDate: 2017,
+            image: 'https://image.tmdb.org/t/p/w500/tFXcEccSQMf3lfhfXKSU9iRBpa3.jpg',
+        },
+        {
+            id: 7,
+            title: 'The Hangover',
+            genre: 'Comedy',
+            rating: 7.7,
+            releaseDate: 2009,
+            image: 'https://image.tmdb.org/t/p/w500/uluhlXubGu1VxU63X9VHCLWDAYP.jpg',
+        },
+        {
+            id: 8,
+            title: 'Superbad',
+            genre: 'Comedy',
+            rating: 7.6,
+            releaseDate: 2007,
+            image: 'https://image.tmdb.org/t/p/w500/ek8e8txUyUwd2BNqj6lFEerJfbq.jpg',
+        },
+        {
+            id: 9,
+            title: 'The Dark Knight',
+            genre: 'Action',
+            rating: 9.0,
+            releaseDate: 2008,
+            image: 'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg',
+        },
+        {
+            id: 10,
+            title: 'Interstellar',
+            genre: 'Sci-Fi',
+            rating: 8.6,
+            releaseDate: 2014,
+            image: 'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg',
+        },
+        {
+            id: 11,
+            title: 'Joker',
+            genre: 'Crime',
+            rating: 8.4,
+            releaseDate: 2019,
+            image: 'https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg',
+        },
+        {
+            id: 12,
+            title: 'Parasite',
+            genre: 'Thriller',
+            rating: 8.6,
+            releaseDate: 2019,
+            image: 'https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg',
+        },
+        {
+            id: 13,
+            title: 'It',
+            genre: 'Horror',
+            rating: 7.3,
+            releaseDate: 2017,
+            image: 'https://image.tmdb.org/t/p/w500/9E2y5Q7WlCVNEhP5GiVTjhEhx1o.jpg',
+        },
+        {
+            id: 14,
+            title: 'Deadpool',
+            genre: 'Comedy',
+            rating: 8.0,
+            releaseDate: 2016,
+            image: 'https://image.tmdb.org/t/p/w500/3E53WEZJqP6aM84D8CckXx4pIHw.jpg',
+        },
+    ],
+    categories: [
+        { name: 'Romance', count: 90 },
+        { name: 'Action', count: 120 },
+        { name: 'Drama', count: 150 },
+        { name: 'Sci-Fi', count: 80 },
+        { name: 'Comedy', count: 70 },
+        { name: 'Horror', count: 60 },
+    ],
+};
+
+export default moviesData;

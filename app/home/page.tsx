@@ -12,7 +12,7 @@ export default function Homepage() {
     const [showAll, setShowAll] = useState(false);
 
     return (
-        <div className="min-h-screen bg-black text-white">
+        <div className="min-h-screen text-white">
             {/* Fixed Navbar */}
             <div className="fixed top-0 left-0 z-50 w-full bg-black/80 backdrop-blur-md">
                 <Navbar />

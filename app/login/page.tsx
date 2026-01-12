@@ -21,7 +21,7 @@ export default function LoginupPage() {
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-900 p-4">
+        <div className="flex min-h-screen items-center justify-center p-4">
             <div className="flex min-h-[600px] w-full max-w-6xl overflow-hidden rounded-lg bg-white shadow-2xl">
                 {/* LEFT – HERO */}
                 <div className="relative w-1/2 overflow-hidden bg-black text-white">

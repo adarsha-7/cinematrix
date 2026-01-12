@@ -14,6 +14,14 @@ export default function MoviePage() {
     const [rating, setRating] = useState(0);
     const [review, setReview] = useState('');
     const [reviews, setReviews] = useState<{ rating: number; text: string }[]>([]);
+    const [isAdded, setIsAdded] = useState(() => {
+        if (typeof window != 'undefined') {
+            const storedData = localStorage.getItem('watchlist');
+            const savedWatchList = JSON.parse(storedData || '[]');
+            return savedWatchList.includes(id);
+        }
+        return false;
+    });
 
     if (!movie) {
         return <div className="flex min-h-screen items-center justify-center bg-black text-white">Movie not found</div>;
@@ -24,6 +32,22 @@ export default function MoviePage() {
         setReviews([...reviews, { rating, text: review }]);
         setRating(0);
         setReview('');
+    };
+
+    const handleToggle = () => {
+        // 1. Get the current list from storage
+        const savedWatchlist = JSON.parse(localStorage.getItem('watchlist') || '[]');
+        let updatedWatchlist;
+
+        if (isAdded) {
+            updatedWatchlist = savedWatchlist.filter((movieId: number) => movieId !== id);
+        } else {
+            updatedWatchlist = [...savedWatchlist, id];
+        }
+
+        localStorage.setItem('watchlist', JSON.stringify(updatedWatchlist));
+
+        setIsAdded(!isAdded);
     };
 
     return (
@@ -39,6 +63,31 @@ export default function MoviePage() {
                         <p className="mt-2 text-gray-400">
                             {movie.genre} • {movie.releaseDate}
                         </p>
+                        <button
+                            className={`flex items-center gap-2 rounded-md px-6 py-2.5 font-medium transition-all duration-200 ${
+                                isAdded
+                                    ? 'border border-zinc-600 bg-zinc-800 text-white'
+                                    : 'bg-[#E11D48] text-white hover:bg-[#BE123C]'
+                            }`}
+                            onClick={handleToggle}
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                                />
+                            </svg>
+                            {isAdded ? 'Added to Watchlist' : 'Add to Watchlist'}
+                        </button>
+
                         <p className="mt-4 max-w-xl text-gray-300">{movie.description}</p>
                     </div>
                 </div>

@@ -2,7 +2,9 @@
 
 import { useState, ChangeEvent } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Film } from 'lucide-react';
+import { authClient } from '@/lib/auth-client';
 
 interface SignupForm {
     fullname: string;
@@ -11,6 +13,8 @@ interface SignupForm {
 }
 
 export default function SignupPage() {
+    const router = useRouter();
+
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState<SignupForm>({
         fullname: '',
@@ -23,15 +27,43 @@ export default function SignupPage() {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    ////////////////////////////////
+    // Better Auth signup handler
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log('Form submitted:', formData);
         const { fullname, email, password } = formData;
-        //////////////////////////////////
+
+        const { data, error } = await authClient.signUp.email(
+            {
+                email,
+                password,
+                name: fullname,
+                callbackURL: '/home',
+            },
+            {
+                onRequest: () => {
+                    // called before sending the request
+                    setLoading(true);
+                    setError(null);
+                },
+                onSuccess: (ctx) => {
+                    // called if signup succeeds
+                    setLoading(false);
+                    console.log('Signup success:', ctx.data);
+                    // Redirect to dashboard or show a success message
+                    router.push('/home');
+                },
+                onError: (ctx) => {
+                    // called if signup fails
+                    setLoading(false);
+                    console.error('Signup error:', ctx.error);
+                    setError(ctx.error?.message || 'Something went wrong');
+                },
+            },
+        );
     };
 
     return (
@@ -133,12 +165,21 @@ export default function SignupPage() {
                         </div>
 
                         {/* SUBMIT */}
-                        <button
-                            type="submit"
-                            className="mb-4 w-full rounded-full bg-red-800 py-3 font-medium text-white transition hover:bg-red-900"
-                        >
-                            Sign up
-                        </button>
+                        {!loading && (
+                            <button
+                                type="submit"
+                                className="mb-4 w-full cursor-pointer rounded-full bg-red-800 py-3 font-medium text-white transition hover:bg-red-900"
+                            >
+                                Sign up
+                            </button>
+                        )}
+                        {loading && (
+                            <button className="bg-opacity-50 mb-4 w-full rounded-full bg-red-800 py-3 font-medium text-white transition hover:bg-red-900">
+                                Signing up...
+                            </button>
+                        )}
+
+                        {error && <p className="mb-4 text-center text-sm text-red-600">{error}</p>}
 
                         <p className="text-center text-sm text-gray-500">
                             Already have an account?{' '}

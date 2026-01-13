@@ -2,10 +2,14 @@
 
 import { useState, ChangeEvent } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Film } from 'lucide-react';
 import type { SignupForm } from '../types';
+import { authClient } from '@/lib/auth-client';
 
 export default function LoginupPage() {
+    const router = useRouter();
+
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState<SignupForm>({
         email: '',
@@ -17,9 +21,42 @@ export default function LoginupPage() {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log('Form submitted:', formData);
+        const { email, password } = formData;
+
+        const { data, error } = await authClient.signIn.email(
+            {
+                email,
+                password,
+                callbackURL: '/home',
+                /**
+                 * remember the user session after the browser is closed.
+                 * @default true
+                 */
+                rememberMe: true,
+            },
+            {
+                onRequest: () => {
+                    setLoading(true);
+                    setError(null);
+                },
+                onSuccess: (ctx) => {
+                    setLoading(false);
+                    console.log('Login success:', ctx.data);
+                    router.push('/home');
+                },
+                onError: (ctx) => {
+                    setLoading(false);
+                    setError(ctx.error?.message || 'Login failed');
+                    console.error('Login error:', ctx.error);
+                },
+            },
+        );
     };
 
     return (
@@ -135,12 +172,22 @@ export default function LoginupPage() {
                         </div>
 
                         {/* SUBMIT */}
-                        <button
-                            type="submit"
-                            className="mb-4 w-full rounded-2xl bg-red-800 py-3 font-medium text-white transition hover:bg-red-900"
-                        >
-                            Login
-                        </button>
+                        {!loading && (
+                            <button
+                                type="submit"
+                                className="mb-4 w-full cursor-pointer rounded-2xl bg-red-800 py-3 font-medium text-white transition hover:bg-red-900"
+                            >
+                                Login
+                            </button>
+                        )}
+
+                        {loading && (
+                            <button className="bg-opacity-50 mb-4 w-full rounded-2xl bg-red-800 py-3 font-medium text-white">
+                                Logging in...
+                            </button>
+                        )}
+
+                        {error && <p className="mb-4 text-center text-sm text-red-600">{error}</p>}
 
                         <p className="text-center text-sm text-gray-500">
                             No account?{' '}

@@ -9,37 +9,22 @@ import { authClient } from '@/lib/auth-client';
 
 export default function LoginupPage() {
     const router = useRouter();
-
     const [showPassword, setShowPassword] = useState(false);
-    const [formData, setFormData] = useState<SignupForm>({
-        email: '',
-        password: '',
-    });
+    const [formData, setFormData] = useState<SignupForm>({ email: '', password: '' });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
         const { email, password } = formData;
 
         const { data, error } = await authClient.signIn.email(
-            {
-                email,
-                password,
-                callbackURL: '/home',
-                /**
-                 * remember the user session after the browser is closed.
-                 * @default true
-                 */
-                rememberMe: true,
-            },
+            { email, password, callbackURL: '/home', rememberMe: true },
             {
                 onRequest: () => {
                     setLoading(true);
@@ -47,13 +32,11 @@ export default function LoginupPage() {
                 },
                 onSuccess: (ctx) => {
                     setLoading(false);
-                    console.log('Login success:', ctx.data);
                     router.push('/home');
                 },
                 onError: (ctx) => {
                     setLoading(false);
                     setError(ctx.error?.message || 'Login failed');
-                    console.error('Login error:', ctx.error);
                 },
             },
         );
@@ -62,24 +45,19 @@ export default function LoginupPage() {
     return (
         <div className="flex min-h-screen items-center justify-center p-4">
             <div className="flex min-h-[600px] w-full max-w-6xl overflow-hidden rounded-lg bg-white shadow-2xl">
-                {/* LEFT – HERO */}
                 <div className="relative hidden w-1/2 overflow-hidden bg-black text-white md:flex">
-                    {/* LOGO */}
                     <div className="absolute top-8 left-8 flex items-center gap-2">
                         <Film className="h-5 w-5 text-red-600" />
                         <span className="text-2xl font-bold">Cinematrix</span>
                     </div>
 
-                    {/* HERO TEXT */}
                     <div className="absolute top-1/2 left-12 -translate-y-1/2 text-left">
                         <h2 className="text-6xl font-bold">Create Your</h2>
                         <h2 className="text-6xl font-bold text-red-600">Cinematic</h2>
                         <h2 className="mb-6 text-6xl font-bold text-red-600">Journey</h2>
-
                         <p className="text-xl">
                             Lights Camera <span className="text-red-600">Connect</span>!!
                         </p>
-
                         <div className="mt-6 flex gap-2">
                             <span className="h-1 w-12 bg-red-600" />
                             <span className="h-1 w-12 bg-gray-600" />
@@ -87,19 +65,16 @@ export default function LoginupPage() {
                         </div>
                     </div>
 
-                    {/* FOOTER */}
                     <p className="absolute bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-400">
                         © 2025 Cinematrix. All rights reserved.
                     </p>
                 </div>
 
-                {/* RIGHT – FORM */}
                 <div className="flex w-full items-center p-12 md:w-1/2">
                     <form onSubmit={handleSubmit} className="mx-auto w-full max-w-md">
                         <h1 className="mb-2 text-center font-serif text-4xl font-light text-gray-800">Welcome back!</h1>
                         <p className="mb-8 text-center text-sm text-gray-600">Login to your account</p>
 
-                        {/* SOCIAL LOGIN */}
                         <div className="mb-6 flex justify-center">
                             <button
                                 type="button"
@@ -127,14 +102,12 @@ export default function LoginupPage() {
                             </button>
                         </div>
 
-                        {/* DIVIDER */}
                         <div className="mb-6 flex items-center gap-4">
                             <span className="h-px flex-1 bg-gray-300" />
                             <span className="text-sm text-gray-500">OR</span>
                             <span className="h-px flex-1 bg-gray-300" />
                         </div>
 
-                        {/* EMAIL */}
                         <div className="mb-5">
                             <label className="mb-2 block font-serif text-sm text-gray-700">Email</label>
                             <input
@@ -148,7 +121,6 @@ export default function LoginupPage() {
                             />
                         </div>
 
-                        {/* PASSWORD */}
                         <div className="mb-8">
                             <label className="mb-2 block font-serif text-sm text-gray-700">Password</label>
                             <div className="relative">
@@ -171,7 +143,6 @@ export default function LoginupPage() {
                             </div>
                         </div>
 
-                        {/* SUBMIT */}
                         {!loading && (
                             <button
                                 type="submit"

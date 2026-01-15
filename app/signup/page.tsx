@@ -14,52 +14,33 @@ interface SignupForm {
 
 export default function SignupPage() {
     const router = useRouter();
-
     const [showPassword, setShowPassword] = useState(false);
-    const [formData, setFormData] = useState<SignupForm>({
-        fullname: '',
-        email: '',
-        password: '',
-    });
+    const [formData, setFormData] = useState<SignupForm>({ fullname: '', email: '', password: '' });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    // Better Auth signup handler
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
         const { fullname, email, password } = formData;
 
         const { data, error } = await authClient.signUp.email(
-            {
-                email,
-                password,
-                name: fullname,
-                callbackURL: '/home',
-            },
+            { email, password, name: fullname, callbackURL: '/home' },
             {
                 onRequest: () => {
-                    // called before sending the request
                     setLoading(true);
                     setError(null);
                 },
                 onSuccess: (ctx) => {
-                    // called if signup succeeds
                     setLoading(false);
-                    console.log('Signup success:', ctx.data);
-                    // Redirect to dashboard or show a success message
                     router.push('/home');
                 },
                 onError: (ctx) => {
-                    // called if signup fails
                     setLoading(false);
-                    console.error('Signup error:', ctx.error);
                     setError(ctx.error?.message || 'Something went wrong');
                 },
             },
@@ -69,7 +50,6 @@ export default function SignupPage() {
     return (
         <div className="flex min-h-screen items-center justify-center p-4">
             <div className="flex min-h-[600px] w-full max-w-6xl overflow-hidden rounded-lg bg-white shadow-2xl">
-                {/* LEFT – FORM */}
                 <div className="flex w-full items-center p-12 md:w-1/2">
                     <form onSubmit={handleSubmit} className="mx-auto w-full max-w-md">
                         <h1 className="mb-2 text-center font-serif text-4xl font-light text-gray-800">
@@ -77,7 +57,6 @@ export default function SignupPage() {
                         </h1>
                         <p className="mb-8 text-center text-sm text-gray-600">Signup to join our community</p>
 
-                        {/* SOCIAL BUTTON */}
                         <div className="mb-6 flex justify-center">
                             <button
                                 type="button"
@@ -105,14 +84,12 @@ export default function SignupPage() {
                             </button>
                         </div>
 
-                        {/* DIVIDER */}
                         <div className="mb-6 flex items-center gap-4">
                             <span className="h-px flex-1 bg-gray-300" />
                             <span className="text-sm text-gray-500">OR</span>
                             <span className="h-px flex-1 bg-gray-300" />
                         </div>
 
-                        {/* FULL NAME */}
                         <div className="mb-5">
                             <label className="mb-2 block font-serif text-sm text-black">Fullname</label>
                             <input
@@ -126,7 +103,6 @@ export default function SignupPage() {
                             />
                         </div>
 
-                        {/* EMAIL */}
                         <div className="mb-5">
                             <label className="mb-2 block font-serif text-sm text-black">Email</label>
                             <input
@@ -140,7 +116,6 @@ export default function SignupPage() {
                             />
                         </div>
 
-                        {/* PASSWORD */}
                         <div className="mb-8">
                             <label className="mb-2 block font-serif text-sm text-black">Password</label>
                             <div className="relative">
@@ -164,7 +139,6 @@ export default function SignupPage() {
                             </div>
                         </div>
 
-                        {/* SUBMIT */}
                         {!loading && (
                             <button
                                 type="submit"
@@ -190,7 +164,6 @@ export default function SignupPage() {
                     </form>
                 </div>
 
-                {/* RIGHT – HERO */}
                 <div className="relative hidden w-1/2 overflow-hidden bg-black text-white md:flex">
                     <div className="absolute top-8 right-8 flex items-center gap-2">
                         <Film className="h-5 w-5 text-red-600" />
@@ -201,11 +174,9 @@ export default function SignupPage() {
                         <h2 className="text-6xl font-bold">Create Your</h2>
                         <h2 className="text-6xl font-bold text-red-600">Cinematic</h2>
                         <h2 className="mb-6 text-6xl font-bold text-red-600">Journey</h2>
-
                         <p className="text-xl">
                             Lights Camera <span className="text-red-600">Connect</span>!!
                         </p>
-
                         <div className="mt-6 flex justify-end gap-2">
                             <span className="h-1 w-12 bg-red-600" />
                             <span className="h-1 w-12 bg-gray-600" />

@@ -3,10 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Play } from 'lucide-react';
+
 import Navbar from '../components/Navbar';
 import Footercomponent from '../components/Footer';
 import MovieCard from '../components/MovieCard';
 import CategoryCard from '../components/CategoryCard';
+
 import moviesData from '../data/movies';
 
 export default function Homepage() {
@@ -14,13 +16,11 @@ export default function Homepage() {
 
     return (
         <div className="min-h-screen text-white">
-            {/* Fixed Navbar */}
             <div className="fixed top-0 left-0 z-50 w-full bg-black/80 backdrop-blur-md">
                 <Navbar />
             </div>
 
             <main className="pt-20">
-                {/* Hero */}
                 <section className="py-20 text-center">
                     <h1 className="text-4xl font-bold md:text-5xl">
                         Experience <span className="text-red-600">Cinema</span> Like Never Before
@@ -36,6 +36,7 @@ export default function Homepage() {
                                 <Play size={16} /> Movies
                             </button>
                         </Link>
+
                         <Link href="/tv-shows">
                             <button className="flex items-center gap-2 rounded-md bg-red-600 px-6 py-2 hover:cursor-pointer hover:bg-red-700">
                                 <Play size={16} /> TV Shows
@@ -44,7 +45,6 @@ export default function Homepage() {
                     </div>
                 </section>
 
-                {/* Recommended */}
                 <section className="py-16">
                     <h2 className="mb-2 text-center text-2xl font-bold">Recommended for you</h2>
 
@@ -75,7 +75,6 @@ export default function Homepage() {
                     </div>
                 </section>
 
-                {/* Categories */}
                 <section className="py-16">
                     <h2 className="mb-8 text-center text-2xl font-bold">Movie Categories</h2>
 
@@ -86,6 +85,7 @@ export default function Homepage() {
                     </div>
                 </section>
             </main>
+
             <Footercomponent />
         </div>
     );

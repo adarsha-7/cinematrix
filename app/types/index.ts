@@ -23,4 +23,10 @@ interface LoginForm {
     password: string;
 }
 
-export type { Movie, Category, SignupForm, LoginForm };
+interface UserProfile {
+    name: string;
+    email: string;
+    image?: string;
+}
+
+export type { Movie, Category, SignupForm, LoginForm, UserProfile };

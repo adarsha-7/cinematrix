@@ -71,7 +71,7 @@ export default function Navbar() {
                             {!user ? (
                                 <User className="h-5 w-5" />
                             ) : user.image ? (
-                                <img className="h-5 w-5 rounded-full" src={user.image} alt="User Avatar" />
+                                <img className="h-6 w-6 rounded-full" src={user.image} alt="User Avatar" />
                             ) : (
                                 <img
                                     className="h-6 w-6 rounded-full"

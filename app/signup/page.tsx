@@ -1,14 +1,22 @@
 'use client';
 
-import { useState, ChangeEvent } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Film } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
+import { useAuth } from '@/context/AuthContext';
 import type { LoginForm } from '../types';
 
 export default function SignupPage() {
     const router = useRouter();
+    const { session } = useAuth();
+    useEffect(() => {
+        if (session?.user) {
+            router.push('/home');
+        }
+    }, [session, router]);
+
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState<LoginForm>({ name: '', email: '', password: '' });
     const [loading, setLoading] = useState(false);
@@ -43,6 +51,23 @@ export default function SignupPage() {
         );
     };
 
+    const handleGoogleSignIn = async () => {
+        setError(null);
+        setLoading(true);
+
+        const { error } = await authClient.signIn.social({
+            provider: 'google',
+            callbackURL: '/home',
+            errorCallbackURL: '/error',
+            newUserCallbackURL: '/home',
+        });
+
+        setLoading(false);
+        if (error) {
+            setError(error.message || 'Google sign-in failed');
+        }
+    };
+
     return (
         <div className="flex min-h-screen items-center justify-center p-4">
             <div className="flex min-h-[600px] w-full max-w-6xl overflow-hidden rounded-lg bg-white shadow-2xl">
@@ -56,7 +81,8 @@ export default function SignupPage() {
                         <div className="mb-6 flex justify-center">
                             <button
                                 type="button"
-                                className="flex w-40 items-center justify-center gap-2 rounded-full border-2 border-gray-300 py-3 text-sm text-gray-600 transition hover:border-gray-400"
+                                onClick={() => handleGoogleSignIn()}
+                                className="flex w-40 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-gray-300 py-3 text-sm text-gray-600 transition hover:border-gray-400"
                             >
                                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                                     <path

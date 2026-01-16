@@ -1,14 +1,22 @@
 'use client';
 
-import { useState, ChangeEvent } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Film } from 'lucide-react';
-import type { SignupForm } from '../types';
 import { authClient } from '@/lib/auth-client';
+import { useAuth } from '@/context/AuthContext';
+import type { SignupForm } from '../types';
 
 export default function LoginPage() {
     const router = useRouter();
+    const { session } = useAuth();
+    useEffect(() => {
+        if (session?.user) {
+            router.push('/home');
+        }
+    }, [session, router]);
+
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState<SignupForm>({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
@@ -44,12 +52,20 @@ export default function LoginPage() {
     };
 
     const handleGoogleSignIn = async () => {
-        await authClient.signIn.social({
+        setError(null);
+        setLoading(true);
+
+        const { error } = await authClient.signIn.social({
             provider: 'google',
             callbackURL: '/home',
             errorCallbackURL: '/error',
             newUserCallbackURL: '/home',
         });
+
+        setLoading(false);
+        if (error) {
+            setError(error.message || 'Google sign-in failed');
+        }
     };
 
     return (
@@ -88,8 +104,8 @@ export default function LoginPage() {
                         <div className="mb-6 flex justify-center">
                             <button
                                 type="button"
-                                onClick={handleGoogleSignIn}
-                                className="flex w-40 items-center justify-center gap-2 rounded-full border-2 border-gray-300 py-3 text-sm text-gray-600 transition hover:border-gray-400"
+                                onClick={() => handleGoogleSignIn()}
+                                className="flex w-40 cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-gray-300 py-3 text-sm text-gray-600 transition hover:border-gray-400"
                             >
                                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                                     <path

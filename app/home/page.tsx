@@ -15,11 +15,15 @@ export default function Homepage() {
     const [showAll, setShowAll] = useState(false);
 
     useEffect(() => {
-        const message = sessionStorage.getItem('toast');
-        if (message) {
-            toast.success(message, { duration: 3000 });
-            sessionStorage.removeItem('toast');
-        }
+        const timer = setTimeout(() => {
+            const message = sessionStorage.getItem('toast');
+            if (message) {
+                toast.success(message, { duration: 3000 });
+                sessionStorage.removeItem('toast');
+            }
+        }, 100);
+
+        return () => clearTimeout(timer);
     }, []);
 
     return (
@@ -31,7 +35,7 @@ export default function Homepage() {
             <main className="pt-20">
                 <section className="py-20 text-center">
                     <h1 className="text-4xl font-bold md:text-5xl">
-                        Experience <span className="text-red-600">Cinema</span> Like Never Before
+                        Experience <span className="text-primary">Cinema</span> Like Never Before
                     </h1>
                     <p className="mx-auto mt-4 max-w-2xl text-sm text-gray-400">
                         Discover, review, and celebrate cinema from blockbusters to indie gems.
@@ -39,13 +43,13 @@ export default function Homepage() {
 
                     <div className="mt-8 flex justify-center gap-4">
                         <Link href="/movies">
-                            <button className="flex cursor-pointer items-center gap-2 rounded-md bg-red-600 px-6 py-2 hover:bg-red-700">
+                            <button className="bg-primary hover:bg-primary-hover flex cursor-pointer items-center gap-2 rounded-md px-6 py-2">
                                 <Play size={16} /> Movies
                             </button>
                         </Link>
 
                         <Link href="/tv-shows">
-                            <button className="flex cursor-pointer items-center gap-2 rounded-md bg-red-600 px-6 py-2 hover:bg-red-700">
+                            <button className="bg-primary hover:bg-primary-hover flex cursor-pointer items-center gap-2 rounded-md px-6 py-2">
                                 <Play size={16} /> TV Shows
                             </button>
                         </Link>
@@ -72,7 +76,7 @@ export default function Homepage() {
                     <div className="mt-10 text-center">
                         <button
                             onClick={() => setShowAll(!showAll)}
-                            className="cursor-pointer rounded border border-gray-600 px-6 py-2 transition hover:border-red-600 hover:text-red-500"
+                            className="hover:border-primary cursor-pointer rounded border border-gray-600 px-6 py-2 transition hover:text-red-500"
                         >
                             {showAll ? 'Show Less' : 'View All'}
                         </button>

@@ -5,17 +5,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Film } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
-
-interface SignupForm {
-    fullname: string;
-    email: string;
-    password: string;
-}
+import type { LoginForm } from '../types';
 
 export default function SignupPage() {
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
-    const [formData, setFormData] = useState<SignupForm>({ fullname: '', email: '', password: '' });
+    const [formData, setFormData] = useState<LoginForm>({ name: '', email: '', password: '' });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -26,10 +21,10 @@ export default function SignupPage() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const { fullname, email, password } = formData;
+        const { name, email, password } = formData;
 
         await authClient.signUp.email(
-            { email, password, name: fullname, callbackURL: '/home' },
+            { email, password, name: name, callbackURL: '/home' },
             {
                 onRequest: () => {
                     setLoading(true);
@@ -92,14 +87,14 @@ export default function SignupPage() {
                         </div>
 
                         <div className="mb-5">
-                            <label className="mb-2 block text-sm text-black">Fullname</label>
+                            <label className="mb-2 block text-sm text-black">name</label>
                             <input
                                 type="text"
-                                name="fullname"
+                                name="name"
                                 required
-                                value={formData.fullname}
+                                value={formData.name}
                                 onChange={handleChange}
-                                placeholder="Enter your fullname"
+                                placeholder="Enter your name"
                                 className="w-full rounded-full border-2 border-gray-300 px-4 py-3 text-sm text-gray-700 focus:border-gray-400 focus:outline-none"
                             />
                         </div>
@@ -153,7 +148,7 @@ export default function SignupPage() {
                             </button>
                         )}
 
-                        {error && <p className="mb-4 text-center text-sm text-red-600">{error}</p>}
+                        {error && <p className="text-primary mb-4 text-center text-sm">{error}</p>}
 
                         <p className="text-center text-sm text-gray-500">
                             Already have an account?{' '}
@@ -166,19 +161,19 @@ export default function SignupPage() {
 
                 <div className="relative hidden w-1/2 overflow-hidden bg-black text-white md:flex">
                     <div className="absolute top-8 right-8 flex items-center gap-2">
-                        <Film className="h-5 w-5 text-red-600" />
+                        <Film className="text-primary h-5 w-5" />
                         <span className="text-2xl font-bold">Cinematrix</span>
                     </div>
 
                     <div className="absolute top-1/2 right-12 -translate-y-1/2 text-right">
                         <h2 className="text-6xl font-bold">Create Your</h2>
-                        <h2 className="text-6xl font-bold text-red-600">Cinematic</h2>
-                        <h2 className="mb-6 text-6xl font-bold text-red-600">Journey</h2>
+                        <h2 className="text-primary text-6xl font-bold">Cinematic</h2>
+                        <h2 className="text-primary mb-6 text-6xl font-bold">Journey</h2>
                         <p className="text-xl">
-                            Lights Camera <span className="text-red-600">Connect</span>!!
+                            Lights Camera <span className="text-primary">Connect</span>!!
                         </p>
                         <div className="mt-6 flex justify-end gap-2">
-                            <span className="h-1 w-12 bg-red-600" />
+                            <span className="bg-primary h-1 w-12" />
                             <span className="h-1 w-12 bg-gray-600" />
                             <span className="h-1 w-12 bg-gray-600" />
                         </div>

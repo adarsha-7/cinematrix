@@ -17,4 +17,10 @@ interface SignupForm {
     password: string;
 }
 
-export type { Movie, Category, SignupForm };
+interface LoginForm {
+    name: string;
+    email: string;
+    password: string;
+}
+
+export type { Movie, Category, SignupForm, LoginForm };

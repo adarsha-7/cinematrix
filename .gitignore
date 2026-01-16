@@ -42,5 +42,5 @@ next-env.d.ts
 
 /generated/prisma
 
-/datasets
+/database_tables
 /movie_vectors

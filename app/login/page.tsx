@@ -57,19 +57,19 @@ export default function LoginPage() {
             <div className="flex w-full max-w-6xl overflow-hidden rounded-lg bg-white shadow-2xl">
                 <div className="relative hidden w-1/2 overflow-hidden bg-black text-white md:flex">
                     <div className="absolute top-8 left-8 flex items-center gap-2">
-                        <Film className="h-5 w-5 text-red-600" />
+                        <Film className="text-primary h-5 w-5" />
                         <span className="text-2xl font-bold">Cinematrix</span>
                     </div>
 
                     <div className="absolute top-1/2 left-12 -translate-y-1/2 text-left">
                         <h2 className="text-6xl font-bold">Create Your</h2>
-                        <h2 className="text-6xl font-bold text-red-600">Cinematic</h2>
-                        <h2 className="mb-6 text-6xl font-bold text-red-600">Journey</h2>
+                        <h2 className="text-primary text-6xl font-bold">Cinematic</h2>
+                        <h2 className="text-primary mb-6 text-6xl font-bold">Journey</h2>
                         <p className="text-xl">
-                            Lights Camera <span className="text-red-600">Connect</span>!!
+                            Lights Camera <span className="text-primary">Connect</span>!!
                         </p>
                         <div className="mt-6 flex gap-2">
-                            <span className="h-1 w-12 bg-red-600" />
+                            <span className="bg-primary h-1 w-12" />
                             <span className="h-1 w-12 bg-gray-600" />
                             <span className="h-1 w-12 bg-gray-600" />
                         </div>
@@ -167,7 +167,7 @@ export default function LoginPage() {
                             </button>
                         )}
 
-                        {error && <p className="mb-4 text-center text-sm text-red-600">{error}</p>}
+                        {error && <p className="text-primary mb-4 text-center text-sm">{error}</p>}
 
                         <p className="text-center text-sm text-gray-500">
                             No account?{' '}

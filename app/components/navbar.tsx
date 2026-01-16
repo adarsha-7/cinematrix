@@ -5,11 +5,15 @@ import { Film, Search, Bookmark, User } from 'lucide-react';
 import { useState } from 'react';
 import { authClient } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
     const router = useRouter();
+
+    const { session, loading, error, refetch } = useAuth();
+    const user = session?.user || null;
 
     const signOut = async () => {
         let toastId: string | number;
@@ -29,27 +33,29 @@ export default function Navbar() {
                 },
             },
         });
+        await refetch();
     };
 
     return (
         <nav className="border-b border-neutral-800 bg-black">
             <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-3 sm:px-6 lg:px-8">
                 <Link href="/home" className="flex items-center gap-2">
-                    <span className="rounded bg-red-600 p-1.5">
+                    <span className="bg-primary rounded p-1.5">
                         <Film className="h-5 w-5 text-white" />
                     </span>
                     <span className="hidden font-medium tracking-wide text-white md:flex">CineMatrix</span>
                 </Link>
 
-                <div className="flex flex-1 items-center justify-center gap-10 md:gap-20">
-                    <div className="relative w-full max-w-md">
-                        <Search className="absolute top-1/2 left-3 w-4 -translate-y-1/2 text-neutral-400" />
-                        <input
-                            type="text"
-                            placeholder="Search movies, TV shows..."
-                            className="w-full rounded-2xl bg-neutral-200 py-1 pr-4 pl-11 text-sm text-neutral-800 placeholder:text-neutral-400 focus:outline-none"
-                        />
-                    </div>
+                <div className="relative w-full max-w-md">
+                    <Search className="absolute top-1/2 left-3 w-4 -translate-y-1/2 text-neutral-400" />
+                    <input
+                        type="text"
+                        placeholder="Search movies, TV shows..."
+                        className="w-full rounded-2xl bg-neutral-200 py-1 pr-4 pl-11 text-sm text-neutral-800 placeholder:text-neutral-400 focus:outline-none"
+                    />
+                </div>
+
+                <div className="flex gap-10">
                     <Link
                         href="/watchlist"
                         className="flex items-center gap-1 whitespace-nowrap text-white transition hover:text-neutral-400"
@@ -57,40 +63,57 @@ export default function Navbar() {
                         <Bookmark className="h-5 w-5" />
                         <span className="hidden md:flex">Watchlist</span>
                     </Link>
-                </div>
+                    <div className="relative">
+                        <button
+                            onClick={() => setOpen((prev) => !prev)}
+                            className="gap- flex cursor-pointer items-center gap-2 whitespace-nowrap text-white transition hover:text-neutral-400"
+                        >
+                            {!user ? (
+                                <User className="h-5 w-5" />
+                            ) : user.image ? (
+                                <img className="h-5 w-5 rounded-full" src={user.image} alt="User Avatar" />
+                            ) : (
+                                <img
+                                    className="h-6 w-6 rounded-full"
+                                    src="https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg"
+                                    alt="Default Avatar"
+                                />
+                            )}
 
-                <div className="relative">
-                    <button
-                        onClick={() => setOpen((p) => !p)}
-                        className="cursor-pointer rounded-full bg-red-600 p-2 transition hover:bg-red-800"
-                    >
-                        <User className="h-4 w-4 text-white" />
-                    </button>
+                            {user && <span className="hidden md:flex">{user.name.split(' ')[0]}</span>}
+                        </button>
 
-                    {open && (
-                        <div className="absolute right-0 mt-4 w-36 rounded-md bg-neutral-900 py-0.5 shadow-lg ring-1 ring-neutral-800">
-                            <Link
-                                href="/user-profile"
-                                className="block cursor-pointer px-4 py-2 text-sm text-white hover:bg-neutral-800"
-                                onClick={() => setOpen(false)}
-                            >
-                                Profile
-                            </Link>
-                            <Link
-                                href="/login"
-                                className="block cursor-pointer px-4 py-2 text-sm text-white hover:bg-neutral-800"
-                                onClick={() => setOpen(false)}
-                            >
-                                Sign in
-                            </Link>
-                            <button
-                                className="w-full cursor-pointer px-4 py-2 text-left text-sm text-red-400 hover:bg-neutral-800"
-                                onClick={() => signOut()}
-                            >
-                                Sign out
-                            </button>
-                        </div>
-                    )}
+                        {open && (
+                            <div className="absolute right-0 mt-5 w-36 rounded-sm bg-neutral-900 py-0.5 shadow-lg ring-1 ring-neutral-800">
+                                {session && (
+                                    <Link
+                                        href="/user-profile"
+                                        className="block cursor-pointer px-4 py-2 text-sm text-white hover:bg-neutral-800"
+                                        onClick={() => setOpen(false)}
+                                    >
+                                        Profile
+                                    </Link>
+                                )}
+                                {!session && (
+                                    <Link
+                                        href="/login"
+                                        className="block cursor-pointer px-4 py-2 text-sm text-white hover:bg-neutral-800"
+                                        onClick={() => setOpen(false)}
+                                    >
+                                        Sign in
+                                    </Link>
+                                )}
+                                {session && (
+                                    <button
+                                        className="w-full cursor-pointer px-4 py-2 text-left text-sm text-red-400 hover:bg-neutral-800"
+                                        onClick={() => signOut()}
+                                    >
+                                        Sign out
+                                    </button>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </nav>

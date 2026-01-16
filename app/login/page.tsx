@@ -6,9 +6,8 @@ import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Film } from 'lucide-react';
 import type { SignupForm } from '../types';
 import { authClient } from '@/lib/auth-client';
-import { toast } from 'sonner';
 
-export default function LoginupPage() {
+export default function LoginPage() {
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState<SignupForm>({ email: '', password: '' });
@@ -24,21 +23,16 @@ export default function LoginupPage() {
         e.preventDefault();
         const { email, password } = formData;
 
-        const { data, error } = await authClient.signIn.email(
-            {
-                email,
-                password,
-                callbackURL: '/home',
-                rememberMe: true,
-            },
+        await authClient.signIn.email(
+            { email, password, callbackURL: '/home', rememberMe: true },
             {
                 onRequest: () => {
                     setLoading(true);
                     setError(null);
                 },
-                onSuccess: (ctx) => {
+                onSuccess: () => {
                     setLoading(false);
-                    toast.success('Logged in successfully');
+                    sessionStorage.setItem('toast', 'Logged in successfully');
                     router.push('/home');
                 },
                 onError: (ctx) => {
@@ -50,7 +44,7 @@ export default function LoginupPage() {
     };
 
     const handleGoogleSignIn = async () => {
-        const data = await authClient.signIn.social({
+        await authClient.signIn.social({
             provider: 'google',
             callbackURL: '/home',
             errorCallbackURL: '/error',
@@ -60,7 +54,7 @@ export default function LoginupPage() {
 
     return (
         <div className="flex min-h-screen items-center justify-center p-4">
-            <div className="flex min-h-[600px] w-full max-w-6xl overflow-hidden rounded-lg bg-white shadow-2xl">
+            <div className="flex w-full max-w-6xl overflow-hidden rounded-lg bg-white shadow-2xl">
                 <div className="relative hidden w-1/2 overflow-hidden bg-black text-white md:flex">
                     <div className="absolute top-8 left-8 flex items-center gap-2">
                         <Film className="h-5 w-5 text-red-600" />
@@ -93,10 +87,8 @@ export default function LoginupPage() {
 
                         <div className="mb-6 flex justify-center">
                             <button
-                                onClick={() => {
-                                    handleGoogleSignIn();
-                                }}
                                 type="button"
+                                onClick={handleGoogleSignIn}
                                 className="flex w-40 items-center justify-center gap-2 rounded-full border-2 border-gray-300 py-3 text-sm text-gray-600 transition hover:border-gray-400"
                             >
                                 <svg className="h-5 w-5" viewBox="0 0 24 24">
@@ -162,18 +154,16 @@ export default function LoginupPage() {
                             </div>
                         </div>
 
-                        {!loading && (
+                        {loading ? (
+                            <button className="mb-4 w-full rounded-3xl bg-red-800 py-3 font-medium text-white opacity-75">
+                                Logging in...
+                            </button>
+                        ) : (
                             <button
                                 type="submit"
-                                className="mb-4 w-full cursor-pointer rounded-2xl bg-red-800 py-3 font-medium text-white transition hover:bg-red-900"
+                                className="mb-4 w-full cursor-pointer rounded-3xl bg-red-800 py-3 font-medium text-white transition hover:bg-red-900"
                             >
                                 Login
-                            </button>
-                        )}
-
-                        {loading && (
-                            <button className="mb-4 w-full rounded-2xl bg-red-800 py-3 font-medium text-white opacity-75">
-                                Logging in...
                             </button>
                         )}
 

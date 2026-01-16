@@ -1,36 +1,15 @@
 import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import { Mail, Phone, Clapperboard } from 'lucide-react';
 
-export default function Aboutpage() {
+export default function AboutPage() {
     return (
-        <div className="min-h-screen bg-black font-medium text-white">
-            {/* Navbar */}
-            <div className="fixed top-0 left-0 z-50 w-full bg-black">
+        <div>
+            <div className="fixed top-0 left-0 z-50 w-full">
                 <Navbar />
             </div>
 
-            {/* Main Content */}
-            <div className="mx-auto mt-5 max-w-6xl space-y-10 px-6 py-16">
-                {/* Top Contact Cards */}
-                <div className="grid gap-8 md:grid-cols-2">
-                    {/* Email Card */}
-                    <div className="rounded-2xl border border-gray-400/40 bg-gray-900 p-8 text-center">
-                        <Mail className="mx-auto mb-4 text-red-600" size={28} />
-                        <p>cinematrix.co.in</p>
-                        <p>cinematrix@gmail.com</p>
-                    </div>
-
-                    {/* Phone Card */}
-                    <div className="rounded-2xl border border-gray-400/40 bg-gray-900 p-8 text-center">
-                        <Phone className="mx-auto mb-4 text-red-600" size={28} />
-                        <p>+977 9876543210</p>
-                        <p>+977 9876543219</p>
-                    </div>
-                </div>
-
-                {/* About Section */}
-                <div className="rounded-2xl border border-gray-400/40 bg-gray-900 p-8">
+            <main className="mx-auto mt-5 max-w-6xl space-y-10 px-6 py-16">
+                <section className="rounded-xl border border-gray-400/40 bg-[#111] p-8">
                     <h2 className="mb-6 text-3xl font-bold text-white">About Cinematrix</h2>
 
                     <div className="space-y-6 leading-relaxed text-gray-200">
@@ -44,40 +23,22 @@ export default function Aboutpage() {
                                 {text}
                             </p>
                         ))}
-
-                        <p className="pt-4 text-center text-white">
-                            Join the conversation. Feel the reel. Live the story.
-                        </p>
+                    </div>
+                </section>
+                <div className="grid gap-8 md:grid-cols-2">
+                    <div className="rounded-xl border border-gray-400/40 bg-[#111] p-8 text-center">
+                        <Mail className="mx-auto mb-4 text-red-600" size={28} />
+                        <p>cinematrix.co.in</p>
+                        <p>cinematrix@gmail.com</p>
                     </div>
 
-                    {/* Contact Form */}
-                    <div className="mx-auto mt-10 max-w-md space-y-5">
-                        <input
-                            type="text"
-                            placeholder="Your Name..."
-                            className="w-full rounded-xl border border-gray-500/30 bg-gray-800 px-4 py-3 placeholder-gray-400 focus:ring-2 focus:ring-red-600 focus:outline-none"
-                        />
-
-                        <input
-                            type="email"
-                            placeholder="Email Address..."
-                            className="w-full rounded-xl border border-gray-500/30 bg-gray-800 px-4 py-3 placeholder-gray-400 focus:ring-2 focus:ring-red-600 focus:outline-none"
-                        />
-
-                        <textarea
-                            rows={4}
-                            placeholder="Your Message..."
-                            className="w-full rounded-xl border border-gray-500/30 bg-gray-800 px-4 py-3 placeholder-gray-400 focus:ring-2 focus:ring-red-600 focus:outline-none"
-                        />
-
-                        <button className="w-full rounded-xl bg-red-700 py-3 transition hover:bg-red-800">
-                            Send Message
-                        </button>
+                    <div className="rounded-xl border border-gray-400/40 bg-[#111] p-8 text-center">
+                        <Phone className="mx-auto mb-4 text-red-600" size={28} />
+                        <p>+977 9876543210</p>
+                        <p>+977 9876543219</p>
                     </div>
                 </div>
-            </div>
-
-            <Footer />
+            </main>
         </div>
     );
 }

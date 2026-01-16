@@ -5,7 +5,6 @@ import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Star } from 'lucide-react';
 
 import Navbar from '../components/Navbar';
-import Footercomponent from '../components/Footer';
 
 import moviesData from '../data/movies';
 import type { Movie } from '../types';
@@ -38,7 +37,7 @@ export default function Moviepage() {
     const displayedMovies = showAll ? filteredMovies : filteredMovies.slice(0, 12);
 
     return (
-        <div className="min-h-screen bg-black text-white">
+        <div>
             <div className="fixed top-0 left-0 z-50 w-full bg-black/80 backdrop-blur-md">
                 <Navbar />
             </div>
@@ -78,14 +77,14 @@ export default function Moviepage() {
                             ))}
                         </div>
 
-                        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                        <div className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                             {displayedMovies.map((movie) => (
                                 <div
                                     key={movie.id}
-                                    className="cursor-pointer overflow-hidden rounded-2xl bg-zinc-900 transition hover:scale-[1.03]"
+                                    className="cursor-pointer overflow-hidden rounded-2xl bg-zinc-900 transition hover:scale-[1.05]"
                                 >
-                                    <img src={movie.image} alt={movie.title} className="h-64 w-full object-cover" />
-                                    <div className="p-4">
+                                    <img src={movie.image} alt={movie.title} className="aspect-2/3 object-cover" />
+                                    <div className="p-2">
                                         <h3 className="text-lg font-semibold">{movie.title}</h3>
                                         <p className="text-sm text-gray-400">
                                             {movie.genre} • {movie.releaseDate}
@@ -112,8 +111,6 @@ export default function Moviepage() {
                     </div>
                 </section>
             </main>
-
-            <Footercomponent />
         </div>
     );
 }

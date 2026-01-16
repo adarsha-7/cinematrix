@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Film } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
-import { toast } from 'sonner';
 
 interface SignupForm {
     fullname: string;
@@ -29,21 +28,16 @@ export default function SignupPage() {
         e.preventDefault();
         const { fullname, email, password } = formData;
 
-        const { data, error } = await authClient.signUp.email(
-            {
-                email,
-                password,
-                name: fullname,
-                callbackURL: '/home',
-            },
+        await authClient.signUp.email(
+            { email, password, name: fullname, callbackURL: '/home' },
             {
                 onRequest: () => {
                     setLoading(true);
                     setError(null);
                 },
-                onSuccess: (ctx) => {
+                onSuccess: () => {
                     setLoading(false);
-                    toast.success('Signed in successfully');
+                    sessionStorage.setItem('toast', 'Signed in successfully');
                     router.push('/home');
                 },
                 onError: (ctx) => {
@@ -146,17 +140,16 @@ export default function SignupPage() {
                             </div>
                         </div>
 
-                        {!loading && (
+                        {loading ? (
+                            <button className="mb-4 w-full rounded-3xl bg-red-800 py-3 font-medium text-white opacity-75">
+                                Signing up...
+                            </button>
+                        ) : (
                             <button
                                 type="submit"
-                                className="mb-4 w-full cursor-pointer rounded-2xl bg-red-800 py-3 font-medium text-white transition hover:bg-red-900"
+                                className="mb-4 w-full cursor-pointer rounded-3xl bg-red-800 py-3 font-medium text-white transition hover:bg-red-900"
                             >
                                 Sign up
-                            </button>
-                        )}
-                        {loading && (
-                            <button className="mb-4 w-full rounded-2xl bg-red-800 py-3 font-medium text-white opacity-75">
-                                Signing up...
                             </button>
                         )}
 

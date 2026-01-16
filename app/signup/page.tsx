@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Film } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
+import { toast } from 'sonner';
 
 interface SignupForm {
     fullname: string;
@@ -42,6 +43,7 @@ export default function SignupPage() {
                 },
                 onSuccess: (ctx) => {
                     setLoading(false);
+                    toast.success('Signed in successfully');
                     router.push('/home');
                 },
                 onError: (ctx) => {

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Film } from 'lucide-react';
 import type { SignupForm } from '../types';
 import { authClient } from '@/lib/auth-client';
+import { toast } from 'sonner';
 
 export default function LoginupPage() {
     const router = useRouter();
@@ -37,6 +38,7 @@ export default function LoginupPage() {
                 },
                 onSuccess: (ctx) => {
                     setLoading(false);
+                    toast.success('Logged in successfully');
                     router.push('/home');
                 },
                 onError: (ctx) => {

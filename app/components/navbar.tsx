@@ -5,6 +5,7 @@ import { Film, Search, Bookmark, User } from 'lucide-react';
 import { useState } from 'react';
 import { authClient } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
@@ -12,10 +13,19 @@ export default function Navbar() {
     const router = useRouter();
 
     const signOut = async () => {
+        let toastLoadingId: string | number;
         await authClient.signOut({
             fetchOptions: {
-                onSuccess: () => {
+                onRequest: () => {
+                    toastLoadingId = toast.loading('Signing out...');
                     setOpen(false);
+                },
+                onSuccess: () => {
+                    toast.success('Signed out successfully', { id: toastLoadingId });
+                    router.push('/home');
+                },
+                onError: () => {
+                    toast.error('Error signing out');
                     router.push('/home');
                 },
             },
@@ -37,11 +47,11 @@ export default function Navbar() {
                     {/* Center */}
                     <div className="flex flex-1 items-center justify-center gap-4">
                         <div className="relative w-full max-w-md">
-                            <Search className="absolute top-1/2 left-3 w-5 -translate-y-1/2 text-neutral-400" />
+                            <Search className="absolute top-1/2 left-3 w-4 -translate-y-1/2 text-neutral-400" />
                             <input
                                 type="text"
                                 placeholder="Search movies, TV shows..."
-                                className="w-full rounded-full bg-neutral-200 py-2 pr-4 pl-11 text-sm text-neutral-800 placeholder:text-neutral-400 focus:outline-none"
+                                className="w-full rounded-2xl bg-neutral-200 py-1 pr-4 pl-11 text-sm text-neutral-800 placeholder:text-neutral-400 focus:outline-none"
                             />
                         </div>
 
@@ -49,7 +59,7 @@ export default function Navbar() {
                             href="/watchlist"
                             className="flex items-center gap-2 whitespace-nowrap text-white transition hover:text-neutral-400"
                         >
-                            <Bookmark className="h-5 w-5" />
+                            <Bookmark className="h-4 w-4" />
                             <span>Watchlist</span>
                         </Link>
                     </div>

@@ -43,7 +43,7 @@ export default async function MovieDetailsPage({ params }: { params: Promise<{ i
                             : undefined
                     }
                 >
-                    <div className="absolute inset-0 flex items-center">
+                    <div className="absolute top-[50%] left-[1%] flex items-center">
                         <div className="mx-auto w-full px-6">
                             <h1 className="text-4xl font-bold md:text-5xl">{movieData.title}</h1>
 

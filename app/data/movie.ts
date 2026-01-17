@@ -128,4 +128,35 @@ const moviesData: {
     ],
 };
 
-export default moviesData;
+const categories = [
+    'Kids',
+    'Mystery',
+    'Music',
+    'News',
+    'Musical',
+    'Action & Adventure',
+    'Talk',
+    'History',
+    'Romance',
+    'Western',
+    'Drama',
+    'Documentary',
+    'Crime',
+    'Fantasy',
+    'Science Fiction',
+    'Family',
+    'Action',
+    'Animation',
+    'Soap',
+    'Reality',
+    'Adventure',
+    'Sci-Fi & Fantasy',
+    'Comedy',
+    'TV Movie',
+    'War',
+    'Horror',
+    'War & Politics',
+    'Thriller',
+];
+
+export { moviesData, categories };

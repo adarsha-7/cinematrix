@@ -3,15 +3,12 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Play } from 'lucide-react';
-
 import Navbar from '../components/Navbar';
 import MovieCard from '../components/MovieCard';
-import CategoryCard from '../components/CategoryCard';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
-
 import type { MovieData } from '../types';
-import moviesData from '../data/movie';
+import { categories } from '../data/movie';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -38,7 +35,7 @@ export default function Homepage() {
             try {
                 setLoadingMovies(true);
                 if (session || !session) {
-                    const res = await fetch(`${BASE_URL}/api/movies?sort=popular&limit=50`);
+                    const res = await fetch(`${BASE_URL}/api/movies?sort=popular&page=1`);
                     const { movieData } = await res.json();
                     setMovies(movieData);
                 }
@@ -127,12 +124,15 @@ export default function Homepage() {
                     </div>
                 </section>
 
-                {/* Categories Section */}
                 <section className="py-16">
                     <h2 className="mb-8 text-center text-2xl font-semibold">Movie Categories</h2>
                     <div className="grid grid-cols-2 gap-6 md:grid-cols-3">
-                        {moviesData.categories.map((category, index) => (
-                            <CategoryCard key={index} category={category} />
+                        {categories.map((category, index) => (
+                            <Link href={`/movies?category=${encodeURIComponent(category)}`} key={index}>
+                                <div className="cursor-pointer rounded-xl border border-gray-700 bg-[#111] py-6 text-center transition hover:border-red-600">
+                                    <h3 className="text-lg font-normal">{category}</h3>
+                                </div>
+                            </Link>
                         ))}
                     </div>
                 </section>

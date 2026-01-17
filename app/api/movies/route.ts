@@ -29,10 +29,10 @@ const mapMovie = (movie: any) => ({
 export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const sort = searchParams.get('sort');
-    const limit = Number(searchParams.get('limit'));
+    const page = Number(searchParams.get('page'));
 
-    if (!sort || !limit || limit <= 0) {
-        return NextResponse.json({ message: 'Missing or invalid sort/limit query parameter' }, { status: 400 });
+    if (!sort || !page || page <= 0) {
+        return NextResponse.json({ message: 'Missing or invalid sort/page query parameter' }, { status: 400 });
     }
 
     if (sort !== 'popular') {
@@ -43,7 +43,8 @@ export async function GET(req: NextRequest) {
         try {
             const movies = await prisma.movie.findMany({
                 orderBy: { voteCount: 'desc' },
-                take: limit,
+                skip: 50 * (page - 1),
+                take: 50,
                 select: {
                     id: true,
                     title: true,

@@ -6,7 +6,7 @@ const moviesData: {
 } = {
     recommended: [
         {
-            id: 1,
+            id: 27205,
             title: 'Inception',
             genre: 'Sci-Fi',
             rating: 8.8,
@@ -14,7 +14,7 @@ const moviesData: {
             image: 'https://image.tmdb.org/t/p/w500/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg',
         },
         {
-            id: 2,
+            id: 597,
             title: 'Titanic',
             genre: 'Romance',
             rating: 7.9,
@@ -22,7 +22,7 @@ const moviesData: {
             image: 'https://image.tmdb.org/t/p/w500/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg',
         },
         {
-            id: 3,
+            id: 13,
             title: 'Forrest Gump',
             genre: 'Drama',
             rating: 8.8,
@@ -30,7 +30,7 @@ const moviesData: {
             image: 'https://image.tmdb.org/t/p/w500/saHP97rTPS5eLmrLQEcANmKrsFl.jpg',
         },
         {
-            id: 4,
+            id: 438631,
             title: 'Dune',
             genre: 'Sci-Fi',
             rating: 8.0,
@@ -38,7 +38,7 @@ const moviesData: {
             image: 'https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg',
         },
         {
-            id: 5,
+            id: 138843,
             title: 'The Conjuring',
             genre: 'Horror',
             rating: 7.5,
@@ -46,7 +46,7 @@ const moviesData: {
             image: 'https://image.tmdb.org/t/p/w500/wVYREutTvI2tmxr6ujrHT704wGF.jpg',
         },
         {
-            id: 6,
+            id: 419430,
             title: 'Get Out',
             genre: 'Horror',
             rating: 7.8,
@@ -54,7 +54,7 @@ const moviesData: {
             image: 'https://image.tmdb.org/t/p/w500/tFXcEccSQMf3lfhfXKSU9iRBpa3.jpg',
         },
         {
-            id: 7,
+            id: 18785,
             title: 'The Hangover',
             genre: 'Comedy',
             rating: 7.7,
@@ -62,7 +62,7 @@ const moviesData: {
             image: 'https://image.tmdb.org/t/p/w500/uluhlXubGu1VxU63X9VHCLWDAYP.jpg',
         },
         {
-            id: 8,
+            id: 8363,
             title: 'Superbad',
             genre: 'Comedy',
             rating: 7.6,
@@ -70,7 +70,7 @@ const moviesData: {
             image: 'https://image.tmdb.org/t/p/w500/ek8e8txUyUwd2BNqj6lFEerJfbq.jpg',
         },
         {
-            id: 9,
+            id: 155,
             title: 'The Dark Knight',
             genre: 'Action',
             rating: 9.0,
@@ -78,7 +78,7 @@ const moviesData: {
             image: 'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg',
         },
         {
-            id: 10,
+            id: 157336,
             title: 'Interstellar',
             genre: 'Sci-Fi',
             rating: 8.6,
@@ -86,7 +86,7 @@ const moviesData: {
             image: 'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg',
         },
         {
-            id: 11,
+            id: 475557,
             title: 'Joker',
             genre: 'Crime',
             rating: 8.4,
@@ -94,7 +94,7 @@ const moviesData: {
             image: 'https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg',
         },
         {
-            id: 12,
+            id: 496243,
             title: 'Parasite',
             genre: 'Thriller',
             rating: 8.6,
@@ -102,7 +102,7 @@ const moviesData: {
             image: 'https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg',
         },
         {
-            id: 13,
+            id: 346364,
             title: 'It',
             genre: 'Horror',
             rating: 7.3,
@@ -110,7 +110,7 @@ const moviesData: {
             image: 'https://image.tmdb.org/t/p/w500/9E2y5Q7WlCVNEhP5GiVTjhEhx1o.jpg',
         },
         {
-            id: 14,
+            id: 293660,
             title: 'Deadpool',
             genre: 'Comedy',
             rating: 8.0,

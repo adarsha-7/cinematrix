@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Star } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import MovieCard from '../components/MovieCard';
 import moviesData from '../data/movie';
 import type { Movie } from '../types';
 
@@ -36,7 +37,7 @@ export default function Moviepage() {
 
     return (
         <div>
-            <div className="fixed top-0 left-0 z-50 w-full bg-black/80 backdrop-blur-md">
+            <div className="fixed top-0 left-0 z-50 w-full">
                 <Navbar />
             </div>
 
@@ -65,7 +66,7 @@ export default function Moviepage() {
                                     router.replace(`${pathname}?category=${encodeURIComponent(genre)}`);
                                 }
                             }}
-                            className={`cursor-pointer rounded-xl border px-5 py-2 text-sm transition ${
+                            className={`cursor-pointer rounded-xl border-2 px-5 py-2 text-sm transition ${
                                 activeGenre === genre
                                     ? 'border-primary bg-primary text-white'
                                     : 'border-gray-600 text-gray-300 hover:border-white'
@@ -78,21 +79,8 @@ export default function Moviepage() {
 
                 <div className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                     {displayedMovies.map((movie) => (
-                        <div
-                            key={movie.id}
-                            className="cursor-pointer overflow-hidden rounded-2xl bg-zinc-900 transition hover:scale-[1.05]"
-                        >
-                            <img src={movie.image} alt={movie.title} className="aspect-2/3 object-cover" />
-                            <div className="p-2">
-                                <h3 className="text-lg font-semibold">{movie.title}</h3>
-                                <p className="text-sm text-gray-400">
-                                    {movie.genre} • {movie.releaseDate}
-                                </p>
-                                <div className="mt-3 flex items-center gap-1 text-yellow-400">
-                                    <Star size={16} className="fill-current" />
-                                    <span className="text-sm font-medium">{movie.rating}</span>
-                                </div>
-                            </div>
+                        <div key={movie.id}>
+                            <MovieCard movie={movie} />
                         </div>
                     ))}
                 </div>

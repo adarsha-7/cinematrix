@@ -63,7 +63,7 @@ export default function Homepage() {
                         className={
                             showAll
                                 ? 'scrollbar-hide grid grid-cols-2 gap-6 py-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'
-                                : 'scrollbar-hide flex gap-6 overflow-x-auto py-2 pb-6'
+                                : 'scrollbar-hide flex gap-6 overflow-x-auto py-3 pb-6'
                         }
                     >
                         {moviesData.recommended.map((movie) => (

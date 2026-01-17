@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Film, Search, Bookmark, User } from 'lucide-react';
+import { Film, Search, LayoutList, User } from 'lucide-react';
 import { useState } from 'react';
 import { authClient } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
@@ -38,7 +38,7 @@ export default function Navbar() {
 
     return (
         <nav className="border-b border-neutral-800 bg-black">
-            <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-3 sm:px-6 lg:px-8">
+            <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-3 sm:px-6 lg:gap-10 lg:px-8">
                 <Link href="/home" className="flex items-center gap-2">
                     <span className="bg-primary rounded p-1.5">
                         <Film className="h-5 w-5 text-white" />
@@ -60,23 +60,24 @@ export default function Navbar() {
                         href="/watchlist"
                         className="flex items-center gap-1 whitespace-nowrap text-white transition hover:text-neutral-400"
                     >
-                        <Bookmark className="h-5 w-5" />
+                        <LayoutList className="h-5 w-5" />
                         <span className="hidden md:flex">Watchlist</span>
                     </Link>
                     <div className="relative">
                         <button
                             onClick={() => setOpen((prev) => !prev)}
-                            className="gap- flex cursor-pointer items-center gap-2 whitespace-nowrap text-white transition hover:text-neutral-400"
+                            className="flex cursor-pointer items-center gap-2 whitespace-nowrap text-white transition hover:text-neutral-400"
                         >
                             {!user ? (
                                 <User className="h-5 w-5" />
-                            ) : user.image ? (
-                                <img className="h-7 w-7 rounded-full" src={user.image} alt="User Avatar" />
                             ) : (
                                 <img
-                                    className="h-7 w-7 rounded-full"
-                                    src="https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg"
-                                    alt="Default Avatar"
+                                    className="h-6 min-h-6 w-6 min-w-6 rounded-full lg:h-7 lg:w-7"
+                                    src={
+                                        user.image ||
+                                        'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg'
+                                    }
+                                    alt="User Avatar"
                                 />
                             )}
 

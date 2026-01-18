@@ -1,12 +1,7 @@
 import type { MovieData } from '../types';
 export const categories: string[] = [
-    'Kids',
     'Mystery',
     'Music',
-    'News',
-    'Musical',
-    'Action & Adventure',
-    'Talk',
     'History',
     'Romance',
     'Western',
@@ -18,15 +13,11 @@ export const categories: string[] = [
     'Family',
     'Action',
     'Animation',
-    'Soap',
-    'Reality',
     'Adventure',
-    'Sci-Fi & Fantasy',
     'Comedy',
     'TV Movie',
     'War',
     'Horror',
-    'War & Politics',
     'Thriller',
 ];
 

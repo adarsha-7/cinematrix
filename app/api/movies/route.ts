@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { cacheLife } from 'next/cache';
 
 const mapMovie = (movie: any) => ({
     id: movie.id,
@@ -27,8 +26,9 @@ const mapMovie = (movie: any) => ({
     productionCountries: movie.productionCountries.map((c: any) => c.country.name),
 });
 
-async function getPopularMovies(page: number) {
+async function getPopularMovies(page: number, genres: string[]) {
     const movies = await prisma.movie.findMany({
+        where: genres.length ? { genres: { some: { genre: { name: { in: genres } } } } } : {},
         orderBy: { voteCount: 'desc' },
         skip: 50 * (page - 1),
         take: 50,
@@ -59,41 +59,35 @@ async function getPopularMovies(page: number) {
             productionCountries: { select: { country: { select: { name: true } } } },
         },
     });
-    return movies.map(mapMovie);
-}
 
-// separate function for page 1 which uses cache
-async function getPopularMoviesPage1() {
-    'use cache';
-    cacheLife({
-        stale: 1 * 86400,
-        revalidate: 3 * 86400,
-        expire: 7 * 86400,
-    });
-    return await getPopularMovies(1);
+    return movies.map(mapMovie);
 }
 
 export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const sort = searchParams.get('sort');
     const page = Number(searchParams.get('page'));
+    const genres = searchParams.getAll('genres');
 
     if (!sort || !page || page <= 0) {
         return NextResponse.json({ message: 'Missing or invalid sort/page query parameter' }, { status: 400 });
     }
 
-    if (sort == 'popular') {
-        try {
-            if (page == 1) {
-                const moviesData = await getPopularMoviesPage1();
-                return NextResponse.json({ moviesData });
-            }
-            const moviesData = await getPopularMovies(page);
-            return NextResponse.json({ moviesData });
-        } catch (err) {
-            console.error('Error fetching movies:', err);
-            return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    try {
+        if (sort === 'popular') {
+            const moviesData = await getPopularMovies(page, genres);
+            return NextResponse.json(
+                { moviesData },
+                {
+                    headers: {
+                        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=30',
+                    },
+                },
+            );
         }
+        return NextResponse.json({ message: 'Invalid fetch options' }, { status: 400 });
+    } catch (err) {
+        console.error('Error fetching movies:', err);
+        return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
     }
-    return NextResponse.json({ message: 'Invalid fetch options' }, { status: 400 });
 }

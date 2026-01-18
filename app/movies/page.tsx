@@ -7,14 +7,13 @@ import MovieCard from '../components/MovieCard';
 import { useAuth } from '@/context/AuthContext';
 import type { MovieData } from '../types';
 
-import { categories } from '../data/movie';
+import { categories, moviesData } from '../data/movie';
 const genres = categories;
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function Moviepage() {
     const [movies, setMovies] = useState<MovieData[] | null>(null);
-    const [filteredMovies, setFilteredMovies] = useState<MovieData[] | null>(null);
     const [page, setPage] = useState<number>(1);
     const [loadingMovies, setLoadingMovies] = useState(true);
     const [activeGenres, setActiveGenres] = useState<string[]>([]);
@@ -29,32 +28,32 @@ export default function Moviepage() {
         async function getMovies() {
             try {
                 setLoadingMovies(true);
-                const res = await fetch(`${BASE_URL}/api/movies?sort=${sort}&page=${page}`);
+                const params = new URLSearchParams({
+                    sort,
+                    page: String(page),
+                });
+
+                activeGenres.forEach((genre) => {
+                    params.append('genres', genre);
+                });
+
+                const res = await fetch(`${BASE_URL}/api/movies?${params.toString()}`);
+                console.log(params.toString());
                 const { moviesData } = await res.json();
                 setMovies(moviesData);
             } catch (err) {
                 console.error('Error fetching movies', err);
+            } finally {
+                setLoadingMovies(false);
             }
         }
+
         getMovies();
-    }, [session, sort, page]);
+    }, [session, sort, page, activeGenres]);
 
-    // Filter movies based on selected genres
-    useEffect(() => {
-        if (activeGenres.length === 0) {
-            setFilteredMovies(movies);
-        } else {
-            setFilteredMovies(
-                movies?.filter((movie) => movie.genres?.some((genre) => activeGenres.includes(genre))) || [],
-            );
-        }
-        setLoadingMovies(false);
-    }, [activeGenres, movies]);
-
-    // Initialize genres from query params
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
-        const category = params.get('category'); // can be comma-separated
+        const category = params.get('category');
         if (category) {
             const selected = category.split(',').filter((c) => genres.includes(c));
             setActiveGenres(selected);
@@ -64,15 +63,12 @@ export default function Moviepage() {
     const handleGenreClick = (genre: string) => {
         let updatedGenres: string[];
         if (activeGenres.includes(genre)) {
-            // Remove genre
             updatedGenres = activeGenres.filter((g) => g !== genre);
         } else {
-            // Add genre
             updatedGenres = [...activeGenres, genre];
         }
         setActiveGenres(updatedGenres);
 
-        // Update URL
         if (updatedGenres.length === 0) {
             router.replace(pathname);
         } else {
@@ -116,7 +112,7 @@ export default function Moviepage() {
 
                 {!loadingMovies && (
                     <div className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                        {filteredMovies?.map((movie) => (
+                        {movies?.map((movie) => (
                             <div key={movie.id}>
                                 <MovieCard movie={movie} />
                             </div>

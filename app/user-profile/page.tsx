@@ -11,7 +11,6 @@ import { authClient } from '@/lib/auth-client';
 import { toast } from 'sonner';
 
 export default function UserProfilePage() {
-    // redirect if not logged in
     const router = useRouter();
     const { session, loading, error, refetch } = useAuth();
 
@@ -21,7 +20,6 @@ export default function UserProfilePage() {
         }
     }, [session, loading, router]);
 
-    // states for new user info
     const [user, setUser] = useState<UserProfile | null>(session?.user || null);
     const [newData, setNewData] = useState<{
         name: string;
@@ -85,63 +83,67 @@ export default function UserProfilePage() {
             <main className="mx-auto mt-24 max-w-4xl px-6 py-16">
                 <h1 className="mb-8 text-center text-3xl font-bold">User Profile</h1>
 
-                <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 rounded-2xl border border-gray-400/40 bg-[#111] p-8">
-                    <img
-                        src={
-                            newData.image
-                                ? URL.createObjectURL(newData.image)
-                                : user?.image ||
-                                  'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg'
-                        }
-                        alt="User Avatar"
-                        className="h-32 w-32 rounded-full border-2 border-neutral-700 object-cover"
-                    />
-
-                    <button
-                        onClick={() => fileInputRef.current?.click()}
-                        className="flex cursor-pointer items-center gap-2 rounded-lg border-neutral-700 bg-neutral-800 px-4 py-2 text-sm text-white hover:bg-neutral-700"
-                    >
-                        <Upload size={16} />
-                        Upload New
-                    </button>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        ref={fileInputRef}
-                        className="hidden"
-                        onChange={handleFileSelect}
-                    />
-
-                    <div className="mt-4 w-full text-center">
-                        <label className="mb-2 block text-sm text-gray-400">Name</label>
-                        <input
-                            type="text"
-                            value={newData.name}
-                            onChange={handleNameChange}
-                            className="w-full rounded-xl border border-gray-500/30 px-4 py-2 text-center text-white focus:ring-1 focus:ring-neutral-600 focus:outline-none"
+                {user && (
+                    <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 rounded-2xl border border-gray-400/40 bg-[#111] p-8">
+                        <img
+                            src={
+                                newData.image
+                                    ? URL.createObjectURL(newData.image)
+                                    : user?.image ||
+                                      'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg'
+                            }
+                            alt="User Avatar"
+                            className="h-32 w-32 rounded-full border-2 border-neutral-700 object-cover"
                         />
-                    </div>
 
-                    <div className="w-full text-center">
-                        <label className="mb-2 block text-sm text-gray-400">Email</label>
-                        <p className="rounded-xl border border-gray-500/30 px-4 py-2 text-white">{user?.email || ''}</p>
-                    </div>
-
-                    {userInfoChanged && !Loading && (
                         <button
-                            onClick={handleSaveChanges}
-                            className="bg-primary hover:bg-primary-hover mt-6 w-full rounded-xl px-6 py-3 text-white"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="flex cursor-pointer items-center gap-2 rounded-lg border-neutral-700 bg-neutral-800 px-4 py-2 text-sm text-white hover:bg-neutral-700"
                         >
-                            Save Changes
+                            <Upload size={16} />
+                            Upload New
                         </button>
-                    )}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            ref={fileInputRef}
+                            className="hidden"
+                            onChange={handleFileSelect}
+                        />
 
-                    {Loading && (
-                        <button className="mt-6 w-full rounded-xl bg-red-900 px-6 py-3 text-white">
-                            Saving Changes...
-                        </button>
-                    )}
-                </div>
+                        <div className="mt-4 w-full text-center">
+                            <label className="mb-2 block text-sm text-gray-400">Name</label>
+                            <input
+                                type="text"
+                                value={newData.name}
+                                onChange={handleNameChange}
+                                className="w-full rounded-xl border border-gray-500/30 px-4 py-2 text-center text-white focus:ring-1 focus:ring-neutral-600 focus:outline-none"
+                            />
+                        </div>
+
+                        <div className="w-full text-center">
+                            <label className="mb-2 block text-sm text-gray-400">Email</label>
+                            <p className="rounded-xl border border-gray-500/30 px-4 py-2 text-white">
+                                {user?.email || ''}
+                            </p>
+                        </div>
+
+                        {userInfoChanged && !Loading && (
+                            <button
+                                onClick={handleSaveChanges}
+                                className="bg-primary hover:bg-primary-hover mt-6 w-full rounded-xl px-6 py-3 text-white"
+                            >
+                                Save Changes
+                            </button>
+                        )}
+
+                        {Loading && (
+                            <button className="mt-6 w-full rounded-xl bg-red-900 px-6 py-3 text-white">
+                                Saving Changes...
+                            </button>
+                        )}
+                    </div>
+                )}
             </main>
         </div>
     );

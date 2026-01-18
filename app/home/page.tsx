@@ -40,7 +40,6 @@ export default function Homepage() {
                     const { moviesData } = await res.json();
                     setMovies(moviesData);
                 }
-                // if (session) fetch recommendation data for the user
             } catch (err) {
                 console.error('Error fetching movies', err);
             } finally {
@@ -127,7 +126,7 @@ export default function Homepage() {
                 </section>
 
                 <section className="py-16">
-                    <h2 className="mb-8 text-center text-2xl font-semibold">Movie Categories</h2>
+                    <h2 className="mb-8 text-center text-2xl font-semibold">Browse By Categories</h2>
                     <div className="grid grid-cols-2 gap-6 md:grid-cols-3">
                         {categories.map((category, index) => (
                             <Link href={`/movies?category=${encodeURIComponent(category)}`} key={index}>

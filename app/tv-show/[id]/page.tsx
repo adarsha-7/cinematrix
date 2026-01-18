@@ -59,7 +59,7 @@ export default async function TVShowDetailsPage({ params }: { params: { id: stri
                                     <span>{new Date(tvShowData.firstAirDate).getFullYear()}</span>
                                 )}
                                 {genres.map((g, i) => (
-                                    <Link key={i} href={`/tv-shows?genre=${g}`}>
+                                    <Link key={i} href={`/tv-shows?category=${g}`}>
                                         <span className="rounded bg-gray-800 px-2 py-1">{g}</span>
                                     </Link>
                                 ))}
@@ -106,8 +106,8 @@ export default async function TVShowDetailsPage({ params }: { params: { id: stri
                         <div>
                             <h2 className="mb-6 text-2xl font-semibold">Cast</h2>
                             <div className="scrollbar-hide flex gap-6 overflow-x-auto pb-4">
-                                {cast.map((actor) => (
-                                    <div key={actor.castOrder} className="min-w-35 text-center">
+                                {cast.map((actor, index) => (
+                                    <div key={index} className="min-w-35 text-center">
                                         <img
                                             src={
                                                 actor.profilePath

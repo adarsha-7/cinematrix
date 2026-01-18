@@ -96,7 +96,7 @@ export default function Homepage() {
                     >
                         {loadingMovies &&
                             Array.from({ length: 5 }).map((_, i) => (
-                                <div key={i} className="h-[300px] w-[220px] animate-pulse rounded-2xl bg-zinc-800" />
+                                <div key={i} className="h-75 w-55 animate-pulse rounded-2xl bg-zinc-800" />
                             ))}
 
                         {!loadingMovies &&

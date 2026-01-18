@@ -1,6 +1,36 @@
 import type { MovieData } from '../types';
+export const categories: string[] = [
+    'Kids',
+    'Mystery',
+    'Music',
+    'News',
+    'Musical',
+    'Action & Adventure',
+    'Talk',
+    'History',
+    'Romance',
+    'Western',
+    'Drama',
+    'Documentary',
+    'Crime',
+    'Fantasy',
+    'Science Fiction',
+    'Family',
+    'Action',
+    'Animation',
+    'Soap',
+    'Reality',
+    'Adventure',
+    'Sci-Fi & Fantasy',
+    'Comedy',
+    'TV Movie',
+    'War',
+    'Horror',
+    'War & Politics',
+    'Thriller',
+];
 
-const moviesData: MovieData[] = [
+export const moviesData: MovieData[] = [
     {
         id: 27205,
         title: 'Inception',

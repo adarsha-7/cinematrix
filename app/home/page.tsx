@@ -8,7 +8,7 @@ import MovieCard from '../components/MovieCard';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 import type { MovieData } from '../types';
-import { categories } from '../data/movie';
+import { categories } from '../data';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -19,6 +19,7 @@ export default function Homepage() {
     const [loadingMovies, setLoadingMovies] = useState(true);
 
     const { session } = useAuth();
+    const [sessionS, setSessionS] = useState(session);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -47,7 +48,7 @@ export default function Homepage() {
             }
         }
         getMovies();
-    }, [session, page]);
+    }, [sessionS, page]);
 
     return (
         <div>

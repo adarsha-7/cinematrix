@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 export async function GET(
-   req: NextRequest,
+    req: NextRequest,
     {
         params,
     }: {
@@ -113,10 +113,7 @@ export async function GET(
     });
 
     if (!tvShow) {
-        return NextResponse.json(
-            { message: 'TV show not found' },
-            { status: 404 }
-        );
+        return NextResponse.json({ message: 'TV show not found' }, { status: 404 });
     }
 
     const tvShowData = {

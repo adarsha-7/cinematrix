@@ -84,7 +84,7 @@ interface TVShowData {
     posterPath: string | null;
     backdropPath: string | null;
 
-    createdBy: string[] | null; // ✅ FIXED
+    createdBy: string[] | null;
 
     cast:
         | {
@@ -102,8 +102,7 @@ interface TVShowData {
     networks: string[] | null;
     originCountries: string[] | null;
     productionCompanies: string[] | null;
-    productionCountries: string[] | null; // ✅ FIXED
+    productionCountries: string[] | null;
 }
 
-
-export type { Movie, Category, SignupForm, LoginForm, UserProfile, MovieData ,TVShowData};
+export type { Movie, Category, SignupForm, LoginForm, UserProfile, MovieData, TVShowData };

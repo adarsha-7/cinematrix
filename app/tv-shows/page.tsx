@@ -3,53 +3,54 @@
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Navbar from '../components/Navbar';
-import TvShowCard from '../components/TvShowCard';
+import TVShowCard from '../components/TVShowCard';
 import { useAuth } from '@/context/AuthContext';
 import type { TVShowData } from '../types';
 
-import { categories } from '../data/movie';
-const genres = categories;
+import { TVcategories } from '../data';
+const genres = TVcategories;
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-export default function TvShowpage() {
-    const [tvShows, setTvShows] = useState<TVShowData[] | null>(null);
-    const [filteredTvShows, setFilteredTvShows] = useState<TVShowData[] | null>(null);
+export default function TVShowpage() {
+    const [TVShows, setTVShows] = useState<TVShowData[] | null>(null);
     const [page, setPage] = useState<number>(1);
-    const [loadingTvShows, setLoadingTvShows] = useState(true);
+    const [loadingTVShows, setLoadingTVShows] = useState(true);
     const [activeGenres, setActiveGenres] = useState<string[]>([]);
     const [sort, setSort] = useState<string>('popular');
 
     const { session } = useAuth();
+    const [sessionS, setSessionS] = useState(session);
     const router = useRouter();
     const pathname = usePathname();
 
     // Fetch movies
     useEffect(() => {
-        async function getTvShows() {
+        async function getTVShows() {
             try {
-                setLoadingTvShows(true);
-                const res = await fetch(`${BASE_URL}/api/tv-shows?sort=${sort}&page=${page}`);
-                const { tvShowsData } = await res.json();
-                setTvShows(tvShowsData);
+                setLoadingTVShows(true);
+                const params = new URLSearchParams({
+                    sort,
+                    page: String(page),
+                });
+
+                activeGenres.forEach((genre) => {
+                    params.append('genres', genre);
+                });
+
+                const res = await fetch(`${BASE_URL}/api/tv-shows?${params.toString()}`);
+                console.log(params.toString());
+                const { TVShowsData } = await res.json();
+                setTVShows(TVShowsData);
             } catch (err) {
-                console.error('Error fetching movies', err);
+                console.error('Error fetching TV shows', err);
+            } finally {
+                setLoadingTVShows(false);
             }
         }
-        getTvShows();
-    }, [session, sort, page]);
 
-    // Filter movies based on selected genres
-    useEffect(() => {
-        if (activeGenres.length === 0) {
-            setFilteredTvShows(tvShows);
-        } else {
-            setFilteredTvShows(
-                tvShows?.filter((tvShow) => tvShow.genres?.some((genre) => activeGenres.includes(genre))) || [],
-            );
-        }
-        setLoadingTvShows(false);
-    }, [activeGenres, tvShows]);
+        getTVShows();
+    }, [sessionS, sort, page, activeGenres]);
 
     // Initialize genres from query params
     useEffect(() => {
@@ -64,15 +65,12 @@ export default function TvShowpage() {
     const handleGenreClick = (genre: string) => {
         let updatedGenres: string[];
         if (activeGenres.includes(genre)) {
-            // Remove genre
             updatedGenres = activeGenres.filter((g) => g !== genre);
         } else {
-            // Add genre
             updatedGenres = [...activeGenres, genre];
         }
         setActiveGenres(updatedGenres);
 
-        // Update URL
         if (updatedGenres.length === 0) {
             router.replace(pathname);
         } else {
@@ -89,7 +87,7 @@ export default function TvShowpage() {
             <main className="mx-auto flex max-w-7xl flex-col gap-10 py-16 pt-30">
                 <div className="flex flex-col gap-5">
                     <h1 className="text-center text-4xl font-bold md:text-5xl">
-                        Discover Your Favorite <span className="text-primary">TvShows</span> Like Never Before
+                        Discover Your Favorite <span className="text-primary">TVShows</span> Like Never Before
                     </h1>
                     <p className="mx-auto mt-4 max-w-3xl text-center text-gray-400">
                         Explore from our catalogue of tv-shows across various genres. Whether you're into heartwarming
@@ -114,17 +112,17 @@ export default function TvShowpage() {
                     ))}
                 </div>
 
-                {!loadingTvShows && (
+                {!loadingTVShows && (
                     <div className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                        {filteredTvShows?.map((tvShow) => (
-                            <div key={tvShow.id}>
-                                <TvShowCard tvShow={tvShow} />
+                        {TVShows?.map((TVShow) => (
+                            <div key={TVShow.id}>
+                                <TVShowCard TVShow={TVShow} />
                             </div>
                         ))}
                     </div>
                 )}
 
-                {loadingTvShows && (
+                {loadingTVShows && (
                     <div className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                         {Array.from({ length: 10 }).map((_, i) => (
                             <div key={i} className="h-75 w-55 animate-pulse rounded-2xl bg-zinc-800" />

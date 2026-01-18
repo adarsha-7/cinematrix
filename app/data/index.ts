@@ -21,6 +21,27 @@ export const categories: string[] = [
     'Thriller',
 ];
 
+export const TVcategories: string[] = [
+    'Kids',
+    'Mystery',
+    'News',
+    'Action & Adventure',
+    'Talk',
+    'Romance',
+    'Western',
+    'Drama',
+    'Documentary',
+    'Crime',
+    'Family',
+    'Animation',
+    'Soap',
+    'Reality',
+    'Sci-Fi & Fantasy',
+    'Comedy',
+    'War & Politics',
+    'Thriller',
+];
+
 export const moviesData: MovieData[] = [
     {
         id: 27205,

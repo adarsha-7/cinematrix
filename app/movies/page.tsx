@@ -7,7 +7,7 @@ import MovieCard from '../components/MovieCard';
 import { useAuth } from '@/context/AuthContext';
 import type { MovieData } from '../types';
 
-import { categories, moviesData } from '../data/movie';
+import { categories } from '../data';
 const genres = categories;
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -20,6 +20,7 @@ export default function Moviepage() {
     const [sort, setSort] = useState<string>('popular');
 
     const { session } = useAuth();
+    const [sessionS, setSessionS] = useState(session);
     const router = useRouter();
     const pathname = usePathname();
 
@@ -49,7 +50,7 @@ export default function Moviepage() {
         }
 
         getMovies();
-    }, [session, sort, page, activeGenres]);
+    }, [sessionS, sort, page, activeGenres]);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);

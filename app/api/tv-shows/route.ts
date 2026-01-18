@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-const mapTvShow = (tvShow: any) => ({
+const mapTVShow = (tvShow: any) => ({
     id: tvShow.id,
     name: tvShow.name,
     overview: tvShow.overview,
@@ -12,12 +12,13 @@ const mapTvShow = (tvShow: any) => ({
     posterPath: tvShow.posterPath,
     backdropPath: tvShow.backdropPath,
     createdBy: tvShow.createdBy?.map((c: any) => c.creator.name) || [],
-    cast: tvShow.cast?.map((c: any) => ({
-        character: c.character,
-        castOrder: c.castOrder,
-        actor: c.person.name,
-        profilePath: c.person.profilePath,
-    })) || [],
+    cast:
+        tvShow.cast?.map((c: any) => ({
+            character: c.character,
+            castOrder: c.castOrder,
+            actor: c.person.name,
+            profilePath: c.person.profilePath,
+        })) || [],
     genres: tvShow.genres?.map((g: any) => g.genre.name) || [],
     languages: tvShow.languages?.map((l: any) => l.language.name) || [],
     spokenLanguages: tvShow.spokenLanguages?.map((l: any) => l.language.name) || [],
@@ -27,8 +28,9 @@ const mapTvShow = (tvShow: any) => ({
     productionCountries: tvShow.productionCountries?.map((c: any) => c.country.name) || [],
 });
 
-async function getPopularTvShows(page: number) {
+async function getPopularTVShows(page: number, genres: string[]) {
     const tvShows = await prisma.tVShow.findMany({
+        where: genres.length ? { genres: { some: { genre: { name: { in: genres } } } } } : {},
         orderBy: { voteCount: 'desc' },
         skip: 50 * (page - 1),
         take: 50,
@@ -57,16 +59,32 @@ async function getPopularTvShows(page: number) {
         },
     });
 
-    return tvShows.map(mapTvShow);
+    return tvShows.map(mapTVShow);
 }
 
 export async function GET(req: NextRequest) {
-    const page = Number(req.nextUrl.searchParams.get('page') || 1);
-    const sort = req.nextUrl.searchParams.get('sort') || 'popular';
+    const searchParams = req.nextUrl.searchParams;
+    const sort = searchParams.get('sort');
+    const page = Number(searchParams.get('page'));
+    const genres = searchParams.getAll('genres');
+
+    if (!sort || !page || page <= 0) {
+        return NextResponse.json({ message: 'Missing or invalid sort/page query parameter' }, { status: 400 });
+    }
 
     try {
-        const tvShowsData = await getPopularTvShows(page);
-        return NextResponse.json({ tvShowsData });
+        if (sort === 'popular') {
+            const TVShowsData = await getPopularTVShows(page, genres);
+            return NextResponse.json(
+                { TVShowsData },
+                {
+                    headers: {
+                        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200',
+                    },
+                },
+            );
+        }
+        return NextResponse.json({ message: 'Invalid fetch options' }, { status: 400 });
     } catch (err) {
         console.error('Error fetching TV shows:', err);
         return NextResponse.json({ message: 'Internal server error' }, { status: 500 });

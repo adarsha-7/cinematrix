@@ -53,7 +53,7 @@ export default async function TVShowDetailsPage({ params }: { params: { id: stri
                                 )}
                                 {tvShowData.firstAirDate && <span>{new Date(tvShowData.firstAirDate).getFullYear()}</span>}
                                 {genres.map((g, i) => (
-                                    <Link key={i} href={`/tvshows?genre=${g}`}>
+                                    <Link key={i} href={`/tv-shows?genre=${g}`}>
                                         <span className="rounded bg-gray-800 px-2 py-1">{g}</span>
                                     </Link>
                                 ))}

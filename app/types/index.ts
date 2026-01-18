@@ -56,4 +56,54 @@ interface MovieData {
     productionCountries: string[] | null;
 }
 
-export type { Movie, Category, SignupForm, LoginForm, UserProfile, MovieData };
+interface TVShowData {
+    id: number | null;
+
+    name: string | null;
+    originalName: string | null;
+    overview: string | null;
+    tagline: string | null;
+
+    firstAirDate: string | null;
+    lastAirDate: string | null;
+    inProduction: boolean | null;
+
+    numberOfSeasons: number | null;
+    numberOfEpisodes: number | null;
+    episodeRunTime: number | null;
+
+    voteAverage: number | null;
+    voteCount: number | null;
+    popularity: number | null;
+
+    adult: boolean | null;
+    status: string | null;
+    type: string | null;
+    homepage: string | null;
+
+    posterPath: string | null;
+    backdropPath: string | null;
+
+    createdBy: string[] | null; // ✅ FIXED
+
+    cast:
+        | {
+              character: string | null;
+              castOrder: number | null;
+              actor: string | null;
+              profilePath: string | null;
+          }[]
+        | null;
+
+    genres: string[] | null;
+    languages: string[] | null;
+    originalLanguages: string[] | null;
+
+    networks: string[] | null;
+    originCountries: string[] | null;
+    productionCompanies: string[] | null;
+    productionCountries: string[] | null; // ✅ FIXED
+}
+
+
+export type { Movie, Category, SignupForm, LoginForm, UserProfile, MovieData ,TVShowData};

@@ -25,9 +25,10 @@ model User {
   avatarUrl    String?
   createdAt    DateTime @default(now())
 
-  ratings      Rating[]
-  watchlists   Watchlist[]
-  interactions UserInteraction[]
+  ratings              Rating[]
+  watchlists           Watchlist[]
+  interactionsMovies   UserInteractionMovies[]
+  movieRecommendations UserMovieRecommendations?
 
   // Fields for better-auth
   emailVerified Boolean   @default(false)
@@ -73,7 +74,7 @@ model Movie {
   director            MovieDirector[]
 
   ratings       Rating[]
-  interactions  UserInteraction[]
+  interactions  UserInteractionMovies[]
   watchlists    WatchlistMovie[]
   featureVector MovieFeatureVector?
 }
@@ -116,7 +117,6 @@ model TVShow {
   cast                TVShowCast[]
 
   ratings       Rating[]
-  interactions  UserInteraction[]
   watchlists    WatchlistTVShow[]
   featureVector TVShowFeature?
 }
@@ -514,10 +514,10 @@ enum InteractionType {
   CLICK
   WATCHLIST
   SEARCH
-  WATCHED
+  RATED
 }
 
-model UserInteraction {
+model UserInteractionMovies {
   id     String @id @default(uuid())
   user   User   @relation(fields: [userId], references: [id])
   userId String
@@ -525,12 +525,22 @@ model UserInteraction {
   movie   Movie? @relation(fields: [movieId], references: [id])
   movieId Int?
 
-  tvShow   TVShow? @relation(fields: [tvShowId], references: [id])
-  tvShowId Int?
-
   type      InteractionType
   value     Int?
   createdAt DateTime        @default(now())
+}
+
+//////////////////////
+// RECOMMENDATIONS
+//////////////////////
+
+model UserMovieRecommendations {
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @id
+
+  recommendations Int[]
+
+  updatedAt DateTime @updatedAt
 }
 
 // Models for better-auth

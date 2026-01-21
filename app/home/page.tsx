@@ -48,6 +48,16 @@ export default function Homepage() {
             }
         }
         getMovies();
+
+        // send the interaction detail in the body of the api call
+        async function saveInteraction() {
+            try {
+                const res = await fetch(`${BASE_URL}/api/interaction`, { method: 'POST' });
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        saveInteraction();
     }, [sessionS, page]);
 
     return (

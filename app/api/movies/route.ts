@@ -26,10 +26,10 @@ const mapMovie = (movie: any) => ({
     productionCountries: movie.productionCountries.map((c: any) => c.country.name),
 });
 
-async function getPopularMovies(page: number, genres: string[]) {
+async function getMovies(page: number, genres: string[], sort: string) {
     const movies = await prisma.movie.findMany({
         where: genres.length ? { genres: { some: { genre: { name: { in: genres } } } } } : {},
-        orderBy: { voteCount: 'desc' },
+        orderBy: (sort == 'popular' && { voteCount: 'desc' }) || { voteCount: 'desc' },
         skip: 50 * (page - 1),
         take: 50,
         select: {
@@ -74,18 +74,15 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        if (sort === 'popular') {
-            const moviesData = await getPopularMovies(page, genres);
-            return NextResponse.json(
-                { moviesData },
-                {
-                    headers: {
-                        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200',
-                    },
+        const moviesData = await getMovies(page, genres, sort);
+        return NextResponse.json(
+            { moviesData },
+            {
+                headers: {
+                    'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200',
                 },
-            );
-        }
-        return NextResponse.json({ message: 'Invalid fetch options' }, { status: 400 });
+            },
+        );
     } catch (err) {
         console.error('Error fetching movies:', err);
         return NextResponse.json({ message: 'Internal server error' }, { status: 500 });

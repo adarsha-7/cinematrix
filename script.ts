@@ -1,38 +1,32 @@
 import { prisma } from './lib/prisma';
-import { writeFileSync } from 'fs';
 
 async function main() {
-    const topMovies = await prisma.movie.findMany({
-        orderBy: { voteCount: 'desc' },
-        take: 50,
-        include: {
-            genres: { include: { genre: true } },
-            keywords: { include: { keyword: true } },
-            spokenLanguages: { include: { language: true } },
-            originalLanguages: { include: { language: true } },
-            productionCompanies: { include: { company: true } },
-            productionCountries: { include: { country: true } },
-            cast: { include: { person: true } },
-            director: { include: { person: true } },
-        },
+    const tvShowId = 20727;
+
+    // Delete related entries first
+    await prisma.tVShowCast.deleteMany({ where: { tvShowId } });
+    await prisma.tVShowCreator.deleteMany({ where: { tvShowId } });
+    await prisma.tVShowGenre.deleteMany({ where: { tvShowId } });
+    await prisma.tVShowLanguage.deleteMany({ where: { tvShowId } });
+    await prisma.tVShowSpokenLanguage.deleteMany({ where: { tvShowId } });
+    await prisma.tVShowOriginalLanguage.deleteMany({ where: { tvShowId } });
+    await prisma.tVShowProductionCompany.deleteMany({ where: { tvShowId } });
+    await prisma.tVShowProductionCountry.deleteMany({ where: { tvShowId } });
+    await prisma.tVShowNetwork.deleteMany({ where: { tvShowId } });
+    await prisma.watchlistTVShow.deleteMany({ where: { tvShowId } });
+    await prisma.rating.deleteMany({ where: { tvShowId } });
+    await prisma.tVShowFeature.deleteMany({ where: { tvShowId } });
+
+    // Finally, delete the TV show
+    await prisma.tVShow.delete({
+        where: { id: tvShowId },
     });
 
-    // Convert BigInt to string for JSON
-    const jsonData = JSON.stringify(
-        topMovies,
-        (_key, value) => (typeof value === 'bigint' ? value.toString() : value),
-        2,
-    );
-
-    writeFileSync('topMovies.json', jsonData, { encoding: 'utf-8' });
-
-    console.log('✅ Top 50 movies saved with all attributes in topMovies.json');
+    console.log(`✅ TV show with ID ${tvShowId} and all related records have been deleted.`);
 }
 
 main()
-    .then(async () => {
-        await prisma.$disconnect();
-    })
+    .then(() => prisma.$disconnect())
     .catch(async (e) => {
         console.error(e);
         await prisma.$disconnect();

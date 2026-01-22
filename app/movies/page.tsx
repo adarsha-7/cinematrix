@@ -27,7 +27,6 @@ export default function Moviepage() {
     const router = useRouter();
     const pathname = usePathname();
 
-    // Fetch movies
     useEffect(() => {
         async function getMovies() {
             try {
@@ -137,9 +136,7 @@ export default function Moviepage() {
                 </div>
 
                 <Select
-                    options={
-                        sessionS ? ['recommended', 'popular', 'newest', 'oldest'] : ['popular', 'newest', 'oldest']
-                    }
+                    options={['recommended', 'popular', 'newest', 'oldest']}
                     selectedOption={sort}
                     setSelectedOption={setSort}
                 ></Select>

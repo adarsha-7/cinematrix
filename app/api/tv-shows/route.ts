@@ -31,7 +31,9 @@ const mapTVShow = (tvShow: any) => ({
 async function getTVShows(page: number, genres: string[], sort: string) {
     const tvShows = await prisma.tVShow.findMany({
         where: genres.length ? { genres: { some: { genre: { name: { in: genres } } } } } : {},
-        orderBy: (sort == 'popular' && { voteCount: 'desc' }) || { voteCount: 'desc' },
+        orderBy: (sort == 'popular' && { voteCount: 'desc' }) ||
+            (sort == 'newest' && { firstAirDate: 'desc' }) ||
+            (sort == 'oldest' && { firstAirDate: 'asc' }) || { voteCount: 'desc' },
         skip: 50 * (page - 1),
         take: 50,
         select: {

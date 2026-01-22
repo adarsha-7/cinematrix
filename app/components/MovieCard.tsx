@@ -5,7 +5,7 @@ import type { MovieData } from '../types/index';
 const IMAGE_BASE = 'https://image.tmdb.org/t/p/w1280';
 
 export default function MovieCard({ movie }: { movie: MovieData }) {
-    const poster = movie.posterPath ? IMAGE_BASE + movie.posterPath : '/placeholder.png';
+    const poster = movie.posterPath ? IMAGE_BASE + movie.posterPath : 'placeholder_poster.jpeg';
     const year = movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : 'N/A';
     const genres = movie.genres?.join(', ') || 'Unknown';
 

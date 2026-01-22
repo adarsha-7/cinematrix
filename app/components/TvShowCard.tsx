@@ -5,7 +5,7 @@ import type { TVShowData } from '../types/index';
 const IMAGE_BASE = 'https://image.tmdb.org/t/p/w1280';
 
 export default function TVShowCard({ TVShow }: { TVShow: TVShowData }) {
-    const poster = TVShow.posterPath ? IMAGE_BASE + TVShow.posterPath : '/placeholder.png';
+    const poster = TVShow.posterPath ? IMAGE_BASE + TVShow.posterPath : 'placeholder_poster.jpeg';
     const year = TVShow.firstAirDate ? new Date(TVShow.firstAirDate).getFullYear() : 'N/A';
     const genres = TVShow.genres?.join(', ') || 'Unknown';
 

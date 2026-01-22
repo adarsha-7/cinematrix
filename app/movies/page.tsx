@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Navbar from '../components/Navbar';
 import MovieCard from '../components/MovieCard';
+import Pagination from '../components/Pagination';
 import { useAuth } from '@/context/AuthContext';
 import type { MovieData } from '../types';
 
@@ -15,6 +16,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export default function Moviepage() {
     const [movies, setMovies] = useState<MovieData[] | null>(null);
     const [page, setPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
     const [loadingMovies, setLoadingMovies] = useState(true);
     const [activeGenres, setActiveGenres] = useState<string[]>([]);
     const [sort, setSort] = useState<string>('popular');
@@ -51,6 +53,28 @@ export default function Moviepage() {
 
         getMovies();
     }, [sessionS, sort, page, activeGenres]);
+
+    useEffect(() => {
+        async function getTotalMovies() {
+            try {
+                const params = new URLSearchParams();
+
+                activeGenres.forEach((genre) => {
+                    params.append('genres', genre);
+                });
+
+                const res = await fetch(`${BASE_URL}/api/movies/count?${params.toString()}`);
+                const { total } = await res.json();
+
+                setTotalPages(Math.ceil(total / 50));
+                setPage(1);
+            } catch (err) {
+                console.error('Error fetching movie count', err);
+            }
+        }
+
+        getTotalMovies();
+    }, [activeGenres]);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -127,6 +151,17 @@ export default function Moviepage() {
                             <div key={i} className="h-75 w-55 animate-pulse rounded-2xl bg-zinc-800" />
                         ))}
                     </div>
+                )}
+
+                {!loadingMovies && totalPages > 1 && (
+                    <Pagination
+                        currentPage={page}
+                        totalPages={totalPages}
+                        onPageChange={(newPage) => {
+                            setPage(newPage);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                    />
                 )}
             </main>
         </div>

@@ -27,7 +27,7 @@ export default function MovieCard({ movie }: { movie: MovieData }) {
                         <p className="text-xs text-gray-400">• {year}</p>
                         <div className="mt-1 flex items-center gap-1 text-yellow-400">
                             <Star size={16} className="fill-current" />
-                            <span className="text-sm font-medium">{movie.voteAverage ?? '-'}</span>
+                            <span className="text-sm font-medium">{movie.voteAverage?.toFixed(1) ?? '-'}</span>
                         </div>
                     </div>
                 </div>

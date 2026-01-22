@@ -106,4 +106,10 @@ interface TVShowData {
     productionCountries: string[] | null;
 }
 
-export type { Movie, Category, SignupForm, LoginForm, UserProfile, MovieData, TVShowData };
+interface PaginationProps {
+    currentPage: number;
+    totalPages: number;
+    onPageChange: (page: number) => void;
+}
+
+export type { Movie, Category, SignupForm, LoginForm, UserProfile, MovieData, TVShowData, PaginationProps };

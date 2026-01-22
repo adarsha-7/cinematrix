@@ -56,6 +56,7 @@ export default async function MovieDetailsPage({ params }: { params: Promise<{ i
                                     <span className="flex items-center gap-1">
                                         <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                                         {movieData.voteAverage.toFixed(1)}
+                                        {movieData.voteCount && ` (${movieData.voteCount.toLocaleString()})`}
                                     </span>
                                 )}
                                 {movieData.releaseDate && <span>{new Date(movieData.releaseDate).getFullYear()}</span>}
@@ -124,7 +125,7 @@ export default async function MovieDetailsPage({ params }: { params: Promise<{ i
                             <h2 className="mb-6 text-2xl font-semibold">Cast</h2>
                             <div className="scrollbar-hide flex gap-6 overflow-x-auto pb-4">
                                 {movieData.cast.map((actor) => (
-                                    <div key={actor.castOrder} className="min-w-35 text-center">
+                                    <div key={actor.castOrder} className="min-w-35 cursor-pointer text-center">
                                         <img
                                             src={
                                                 actor.profilePath

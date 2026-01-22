@@ -48,23 +48,23 @@ export default function Homepage() {
             }
         }
         getMovies();
-
-        // api call on interaction and session exists
-        async function saveInteraction() {
-            try {
-                const res = await fetch(`${BASE_URL}/api/interaction`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        movieId: 77,
-                        type: 'RATED',
-                        value: 7,
-                    }),
-                });
-            } catch (err) {
-                console.log(err);
-            }
-        }
     }, [sessionS, page]);
+
+    // api call on interaction and session exists
+    async function saveInteraction(movieId: string, type: string, value?: number) {
+        try {
+            const res = await fetch(`${BASE_URL}/api/interaction`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    movieId,
+                    type,
+                    value,
+                }),
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     return (
         <div>

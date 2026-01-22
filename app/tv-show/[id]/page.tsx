@@ -53,6 +53,7 @@ export default async function TVShowDetailsPage({ params }: { params: { id: stri
                                     <span className="flex items-center gap-1">
                                         <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                                         {tvShowData.voteAverage.toFixed(1)}
+                                        {tvShowData.voteCount && ` (${tvShowData.voteCount.toLocaleString()})`}
                                     </span>
                                 )}
                                 {tvShowData.firstAirDate && (
@@ -107,7 +108,7 @@ export default async function TVShowDetailsPage({ params }: { params: { id: stri
                             <h2 className="mb-6 text-2xl font-semibold">Cast</h2>
                             <div className="scrollbar-hide flex gap-6 overflow-x-auto pb-4">
                                 {cast.map((actor, index) => (
-                                    <div key={index} className="min-w-35 text-center">
+                                    <div key={index} className="min-w-35 cursor-pointer text-center">
                                         <img
                                             src={
                                                 actor.profilePath

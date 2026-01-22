@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 
 const mapMovie = (movie: any) => ({
@@ -65,9 +67,66 @@ async function getMovies(page: number, genres: string[], sort: string) {
     return movies.map(mapMovie);
 }
 
+async function getRecommendedMovies(page: number, genres: string[], hideWatched: boolean, userId: string) {
+    const rec = await prisma.userMovieRecommendations.findUnique({
+        where: { userId },
+        select: { recommendations: true },
+    });
+
+    if (!rec || rec.recommendations.length === 0) return [];
+
+    const pageSize = 50;
+    const start = pageSize * (page - 1);
+    const end = start + pageSize;
+
+    const pagedIds = rec.recommendations.slice(start, end).map((id) => Number(id));
+
+    if (!pagedIds.length) return [];
+
+    const movies = await prisma.movie.findMany({
+        where: {
+            id: { in: pagedIds },
+            ...(genres.length ? { genres: { some: { genre: { name: { in: genres } } } } } : {}),
+        },
+        select: {
+            id: true,
+            title: true,
+            overview: true,
+            tagline: true,
+            releaseDate: true,
+            runtime: true,
+            voteAverage: true,
+            voteCount: true,
+            backdropPath: true,
+            posterPath: true,
+            director: { select: { person: { select: { name: true } } } },
+            cast: {
+                orderBy: { castOrder: 'asc' },
+                select: {
+                    character: true,
+                    castOrder: true,
+                    person: { select: { name: true, profilePath: true } },
+                },
+            },
+            genres: { select: { genre: { select: { name: true } } } },
+            keywords: { select: { keyword: { select: { name: true } } } },
+            originalLanguages: { select: { language: { select: { name: true } } } },
+            productionCompanies: { select: { company: { select: { name: true } } } },
+            productionCountries: { select: { country: { select: { name: true } } } },
+        },
+    });
+
+    // Preserve recommendation order
+    const orderMap = new Map(pagedIds.map((id, i) => [id, i]));
+    movies.sort((a, b) => orderMap.get(a.id)! - orderMap.get(b.id)!);
+
+    return movies.map(mapMovie);
+}
+
 export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const sort = searchParams.get('sort');
+    const hideWatched = Boolean(searchParams.get('hideWatched'));
     const page = Number(searchParams.get('page'));
     const genres = searchParams.getAll('genres');
 
@@ -75,8 +134,21 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ message: 'Missing or invalid sort/page query parameter' }, { status: 400 });
     }
 
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+
     try {
-        const moviesData = await getMovies(page, genres, sort);
+        let moviesData: any;
+        if (sort == 'recommended') {
+            if (session) {
+                moviesData = await getRecommendedMovies(page, genres, hideWatched, session.user.id);
+            } else {
+                moviesData = [];
+            }
+        } else {
+            moviesData = await getMovies(page, genres, sort);
+        }
         return NextResponse.json(
             { moviesData },
             {

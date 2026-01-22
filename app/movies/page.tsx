@@ -10,6 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 import type { MovieData } from '../types';
 
 import { categories } from '../data';
+import { Heading1 } from 'lucide-react';
 const genres = categories;
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -21,6 +22,7 @@ export default function Moviepage() {
     const [loadingMovies, setLoadingMovies] = useState(true);
     const [activeGenres, setActiveGenres] = useState<string[]>([]);
     const [sort, setSort] = useState<string>('popular');
+    const [hideWatched, setHideWatched] = useState<boolean>(false);
 
     const { session } = useAuth();
     const [sessionS, setSessionS] = useState(session);
@@ -33,6 +35,7 @@ export default function Moviepage() {
                 setLoadingMovies(true);
                 const params = new URLSearchParams({
                     sort,
+                    hideWatched: String(hideWatched),
                     page: String(page),
                 });
 
@@ -135,11 +138,38 @@ export default function Moviepage() {
                     ))}
                 </div>
 
-                <Select
-                    options={['recommended', 'popular', 'newest', 'oldest']}
-                    selectedOption={sort}
-                    setSelectedOption={setSort}
-                ></Select>
+                <div className="flex h-15 items-center justify-start gap-5">
+                    <Select
+                        options={['recommended', 'popular', 'newest', 'oldest']}
+                        selectedOption={sort}
+                        setSelectedOption={setSort}
+                    ></Select>
+                    {!loadingMovies && movies?.length != 0 && sort == 'recommended' && (
+                        <label className="mt-6 flex cursor-pointer items-center gap-3 text-sm">
+                            <span className="relative flex h-5 w-5 items-center justify-center">
+                                <input
+                                    type="checkbox"
+                                    checked={hideWatched}
+                                    onChange={(e) => setHideWatched(e.target.checked)}
+                                    className="peer sr-only"
+                                />
+                                <div className="peer-checked:border-primary peer-checked:bg-primary h-5 w-5 rounded-3xl border-2 border-gray-700 transition" />
+                                <svg
+                                    className="pointer-events-none absolute h-3 w-3 text-white opacity-0 transition peer-checked:opacity-100"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="3"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                            </span>
+                            <span className="select-none">Hide Watched Movies</span>
+                        </label>
+                    )}
+                </div>
 
                 {!loadingMovies && (
                     <div className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -157,6 +187,14 @@ export default function Moviepage() {
                             <div key={i} className="h-75 w-55 animate-pulse rounded-2xl bg-zinc-800" />
                         ))}
                     </div>
+                )}
+
+                {!loadingMovies && movies?.length == 0 && session && sort == 'recommended' && (
+                    <p className="mt-10 mb-30 text-center text-lg">Browse or Rate Movies for Recommendations</p>
+                )}
+
+                {!loadingMovies && movies?.length == 0 && !session && sort == 'recommended' && (
+                    <p className="mt-10 mb-30 text-center text-lg">Login for Recommendations</p>
                 )}
 
                 {!loadingMovies && totalPages > 1 && (

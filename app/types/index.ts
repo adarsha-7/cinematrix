@@ -112,4 +112,10 @@ interface PaginationProps {
     onPageChange: (page: number) => void;
 }
 
+export type selectProps = {
+    options: string[];
+    selectedOption: string;
+    setSelectedOption: (value: string) => void;
+};
+
 export type { Movie, Category, SignupForm, LoginForm, UserProfile, MovieData, TVShowData, PaginationProps };

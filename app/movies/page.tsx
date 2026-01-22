@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Navbar from '../components/Navbar';
 import MovieCard from '../components/MovieCard';
 import Pagination from '../components/Pagination';
+import Select from '../components/Select';
 import { useAuth } from '@/context/AuthContext';
 import type { MovieData } from '../types';
 
@@ -107,7 +108,7 @@ export default function Moviepage() {
                 <Navbar />
             </div>
 
-            <main className="mx-auto flex max-w-7xl flex-col gap-10 py-16 pt-30">
+            <main className="mx-auto flex max-w-7xl flex-col py-16 pt-30">
                 <div className="flex flex-col gap-5">
                     <h1 className="text-center text-4xl font-bold md:text-5xl">
                         Discover Your Favorite <span className="text-primary">Movies</span> Like Never Before
@@ -127,13 +128,21 @@ export default function Moviepage() {
                             className={`cursor-pointer rounded-xl border-2 px-5 py-2 text-sm transition ${
                                 activeGenres.includes(genre)
                                     ? 'border-primary bg-primary text-white'
-                                    : 'hover:border-primary border-gray-600 text-gray-300'
+                                    : 'hover:border-primary border-gray-700 text-gray-300'
                             }`}
                         >
                             {genre}
                         </button>
                     ))}
                 </div>
+
+                <Select
+                    options={
+                        sessionS ? ['recommended', 'popular', 'newest', 'oldest'] : ['popular', 'newest', 'oldest']
+                    }
+                    selectedOption={sort}
+                    setSelectedOption={setSort}
+                ></Select>
 
                 {!loadingMovies && (
                     <div className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">

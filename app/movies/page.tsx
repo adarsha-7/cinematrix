@@ -55,22 +55,26 @@ export default function Moviepage() {
         }
 
         getMovies();
-    }, [sessionS, sort, page, activeGenres]);
+    }, [sessionS, sort, page, hideWatched, activeGenres]);
 
     useEffect(() => {
         async function getTotalMovies() {
             try {
-                const params = new URLSearchParams();
+                if (sort == 'recommended') {
+                    setTotalPages(Math.ceil(2000 / 50));
+                } else {
+                    const params = new URLSearchParams();
 
-                activeGenres.forEach((genre) => {
-                    params.append('genres', genre);
-                });
+                    activeGenres.forEach((genre) => {
+                        params.append('genres', genre);
+                    });
 
-                const res = await fetch(`${BASE_URL}/api/movies/count?${params.toString()}`);
-                const { total } = await res.json();
+                    const res = await fetch(`${BASE_URL}/api/movies/count?${params.toString()}`);
+                    const { total } = await res.json();
 
-                setTotalPages(Math.ceil(total / 50));
-                setPage(1);
+                    setTotalPages(Math.ceil(total / 50));
+                    setPage(1);
+                }
             } catch (err) {
                 console.error('Error fetching movie count', err);
             }
@@ -144,7 +148,7 @@ export default function Moviepage() {
                         selectedOption={sort}
                         setSelectedOption={setSort}
                     ></Select>
-                    {!loadingMovies && movies?.length != 0 && sort == 'recommended' && (
+                    {movies?.length != 0 && sort == 'recommended' && (
                         <label className="mt-6 flex cursor-pointer items-center gap-3 text-sm">
                             <span className="relative flex h-5 w-5 items-center justify-center">
                                 <input

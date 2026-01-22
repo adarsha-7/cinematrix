@@ -49,7 +49,7 @@ export default function Homepage() {
         }
         getMovies();
 
-        // send the interaction detail in the body of the api call
+        // api call on interaction and session exists
         async function saveInteraction() {
             try {
                 const res = await fetch(`${BASE_URL}/api/interaction`, {
@@ -64,7 +64,6 @@ export default function Homepage() {
                 console.log(err);
             }
         }
-        saveInteraction();
     }, [sessionS, page]);
 
     return (

@@ -29,6 +29,7 @@ export async function GET(
             voteCount: true,
             backdropPath: true,
             posterPath: true,
+            imdbId: true,
             director: {
                 select: {
                     person: {
@@ -89,6 +90,7 @@ export async function GET(
         voteCount: movie.voteCount,
         backdropPath: movie.backdropPath,
         posterPath: movie.posterPath,
+        imdbId: movie.imdbId,
 
         director: movie.director[0]?.person.name ?? null,
 

@@ -68,6 +68,16 @@ export default async function MovieDetailsPage({ params }: { params: Promise<{ i
                                     ))}
                             </div>
 
+                            {movieData.imdbId && (
+                                <div className="mt-4 flex">
+                                    <Link href={`https://www.imdb.com/title/` + movieData.imdbId} target="_blank">
+                                        <span className="rounded bg-yellow-500 px-2 py-1 font-bold text-neutral-900">
+                                            IMDB
+                                        </span>
+                                    </Link>
+                                </div>
+                            )}
+
                             <div className="mt-6 flex gap-4">
                                 <button className="flex items-center gap-2 rounded-md bg-gray-700 px-6 py-2 transition hover:bg-gray-600">
                                     <Plus size={18} /> Add to Watchlist
@@ -114,7 +124,7 @@ export default async function MovieDetailsPage({ params }: { params: Promise<{ i
                             <h2 className="mb-6 text-2xl font-semibold">Cast</h2>
                             <div className="scrollbar-hide flex gap-6 overflow-x-auto pb-4">
                                 {movieData.cast.map((actor) => (
-                                    <div key={actor.castOrder} className="min-w-[140px] text-center">
+                                    <div key={actor.castOrder} className="min-w-35 text-center">
                                         <img
                                             src={
                                                 actor.profilePath

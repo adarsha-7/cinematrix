@@ -40,6 +40,7 @@ interface MovieData {
     voteCount: number | null;
     backdropPath: string | null;
     posterPath: string | null;
+    imdbId: string | null;
     director: string | null;
     cast:
         | {

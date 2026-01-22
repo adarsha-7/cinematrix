@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "user" ALTER COLUMN "interactionCount" SET DEFAULT 0,
+ALTER COLUMN "interactionCount" SET DATA TYPE DOUBLE PRECISION;

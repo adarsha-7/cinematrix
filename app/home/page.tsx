@@ -52,7 +52,14 @@ export default function Homepage() {
         // send the interaction detail in the body of the api call
         async function saveInteraction() {
             try {
-                const res = await fetch(`${BASE_URL}/api/interaction`, { method: 'POST' });
+                const res = await fetch(`${BASE_URL}/api/interaction`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        movieId: 77,
+                        type: 'RATED',
+                        value: 7,
+                    }),
+                });
             } catch (err) {
                 console.log(err);
             }

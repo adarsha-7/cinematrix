@@ -25,6 +25,8 @@ model User {
   avatarUrl    String?
   createdAt    DateTime @default(now())
 
+  interactionCount Float @default(0)
+
   ratings              Rating[]
   watchlists           Watchlist[]
   interactionsMovies   UserInteractionMovies[]

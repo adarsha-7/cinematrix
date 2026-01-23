@@ -23,11 +23,14 @@ export default function TVShowpage() {
     const [sort, setSort] = useState<string>('popular');
 
     const { session } = useAuth();
-    const [sessionS, setSessionS] = useState(session);
+    const [sessionS, setSessionS] = useState(null);
     const router = useRouter();
     const pathname = usePathname();
 
-    // Fetch movies
+    useEffect(() => {
+        setSessionS(session);
+    }, [session]);
+
     useEffect(() => {
         async function getTVShows() {
             try {
@@ -53,7 +56,7 @@ export default function TVShowpage() {
         }
 
         getTVShows();
-    }, [sessionS, sort, page, activeGenres]);
+    }, [sort, page, activeGenres]);
 
     useEffect(() => {
         async function getTotalTVShows() {
@@ -77,10 +80,9 @@ export default function TVShowpage() {
         getTotalTVShows();
     }, [activeGenres]);
 
-    // Initialize genres from query params
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
-        const category = params.get('category'); // can be comma-separated
+        const category = params.get('category');
         if (category) {
             const selected = category.split(',').filter((c) => genres.includes(c));
             setActiveGenres(selected);

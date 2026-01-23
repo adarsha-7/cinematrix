@@ -471,6 +471,8 @@ model Rating {
 
   rating    Int
   createdAt DateTime @default(now())
+
+  @@unique([userId, movieId])
 }
 
 //////////////////////

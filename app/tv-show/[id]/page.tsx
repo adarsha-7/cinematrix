@@ -1,4 +1,5 @@
 import Navbar from '@/app/components/Navbar';
+import RateSection from '@/app/components/Rate';
 import { Star, Plus } from 'lucide-react';
 import Link from 'next/link';
 import type { TVShowData } from '@/app/types';
@@ -15,7 +16,6 @@ export default async function TVShowDetailsPage({ params }: { params: { id: stri
     const { tvShowData }: { tvShowData: TVShowData } = await res.json();
     if (!tvShowData) throw new Error('TV show not found');
 
-    // Normalize nullable arrays
     const createdBy = tvShowData.createdBy ?? [];
     const cast = tvShowData.cast ?? [];
     const originalLanguages = tvShowData.originalLanguages ?? [];
@@ -90,17 +90,7 @@ export default async function TVShowDetailsPage({ params }: { params: { id: stri
                         </div>
                     )}
 
-                    {/* Rate This TV Show */}
-                    <div>
-                        <h2 className="mb-3 text-2xl font-semibold">Rate This TV Show</h2>
-                        <div className="flex gap-2">
-                            {Array.from({ length: 10 }).map((_, i) => (
-                                <button key={i} className="transition hover:scale-110">
-                                    <Star className="h-6 w-6 text-gray-600 hover:fill-yellow-400 hover:text-yellow-400" />
-                                </button>
-                            ))}
-                        </div>
-                    </div>
+                    <RateSection id={id} />
 
                     {/* Cast */}
                     {cast.length > 0 && (

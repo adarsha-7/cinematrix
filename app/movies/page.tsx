@@ -10,7 +10,6 @@ import { useAuth } from '@/context/AuthContext';
 import type { MovieData } from '../types';
 
 import { categories } from '../data';
-import { Heading1 } from 'lucide-react';
 const genres = categories;
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -25,14 +24,20 @@ export default function Moviepage() {
     const [hideWatched, setHideWatched] = useState<boolean>(false);
 
     const { session } = useAuth();
-    const [sessionS, setSessionS] = useState(session);
+    const [sessionS, setSessionS] = useState(null);
     const router = useRouter();
     const pathname = usePathname();
 
     useEffect(() => {
+        setSessionS(session);
+    }, [session]);
+
+    useEffect(() => {
         async function getMovies() {
             try {
-                setLoadingMovies(true);
+                if (!sessionS) {
+                    setLoadingMovies(true);
+                }
                 const params = new URLSearchParams({
                     sort,
                     hideWatched: String(hideWatched),
@@ -55,7 +60,7 @@ export default function Moviepage() {
         }
 
         getMovies();
-    }, [sessionS, sort, page, hideWatched, activeGenres]);
+    }, [sort, page, hideWatched, activeGenres]);
 
     useEffect(() => {
         async function getTotalMovies() {
@@ -193,12 +198,12 @@ export default function Moviepage() {
                     </div>
                 )}
 
-                {!loadingMovies && movies?.length == 0 && session && sort == 'recommended' && (
-                    <p className="mt-10 mb-30 text-center text-lg">Browse or Rate Movies for Recommendations</p>
+                {!loadingMovies && movies?.length == 0 && sessionS && sort == 'recommended' && (
+                    <p className="mt-15 mb-50 text-center text-lg">Browse or Rate Movies for Recommendations</p>
                 )}
 
-                {!loadingMovies && movies?.length == 0 && !session && sort == 'recommended' && (
-                    <p className="mt-10 mb-30 text-center text-lg">Login for Recommendations</p>
+                {!loadingMovies && movies?.length == 0 && !sessionS && sort == 'recommended' && (
+                    <p className="mt-15 mb-50 text-center text-lg">Login for Recommendations</p>
                 )}
 
                 {!loadingMovies && totalPages > 1 && (

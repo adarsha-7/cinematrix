@@ -1,4 +1,5 @@
 import Navbar from '@/app/components/Navbar';
+import RateSection from '@/app/components/Rate';
 import { Star, Plus } from 'lucide-react';
 import Link from 'next/link';
 import type { MovieData } from '@/app/types';
@@ -10,16 +11,10 @@ export default async function MovieDetailsPage({ params }: { params: Promise<{ i
     const { id } = await params;
 
     const res = await fetch(`${BASE_URL}/api/movie/${id}`);
-
-    if (!res.ok) {
-        throw new Error('Failed to fetch movie');
-    }
+    if (!res.ok) throw new Error('Failed to fetch movie');
 
     const { movieData }: { movieData: MovieData } = await res.json();
-
-    if (!movieData) {
-        throw new Error('Movie not found');
-    }
+    if (!movieData) throw new Error('Movie not found');
 
     return (
         <div>
@@ -103,21 +98,7 @@ export default async function MovieDetailsPage({ params }: { params: Promise<{ i
                         </div>
                     )}
 
-                    {/* Rate This Movie */}
-                    <div>
-                        <h2 className="mb-3 text-2xl font-semibold">Rate This Movie</h2>
-                        <div className="flex gap-2">
-                            {Array.from({ length: 10 }).map((_, i) => (
-                                <button
-                                    key={i}
-                                    className="transition hover:scale-110"
-                                    aria-label={`Rate ${i + 1} stars`}
-                                >
-                                    <Star className="h-6 w-6 text-gray-600 hover:fill-yellow-400 hover:text-yellow-400" />
-                                </button>
-                            ))}
-                        </div>
-                    </div>
+                    <RateSection id={id} />
 
                     {/* Cast */}
                     {movieData.cast && (

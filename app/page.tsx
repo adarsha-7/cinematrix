@@ -51,7 +51,7 @@ export default function Homepage() {
         async function getRecommendedMovies() {
             try {
                 if (session) {
-                    const res = await fetch(`${BASE_URL}/api/movies?sort=recommended&page=1`);
+                    const res = await fetch(`${BASE_URL}/api/movies?sort=recommended&hideWatched=true&page=1`);
                     const { moviesData } = await res.json();
                     setRecommendedMovies(moviesData);
                 }
@@ -77,6 +77,11 @@ export default function Homepage() {
             console.log(err);
         }
     }
+
+    const [oneSecondPassed, setOneSecondPassed] = useState<boolean>(false);
+    setTimeout(() => {
+        setOneSecondPassed(true);
+    }, 1000);
 
     return (
         <div>
@@ -110,83 +115,95 @@ export default function Homepage() {
                     </div>
                 </section>
 
-                <section>
-                    <h2 className="mb-2 text-center text-2xl font-semibold">
-                        {!loadingMovies && (session ? 'Recommended for you' : 'Popular Movies')}
-                    </h2>
-
-                    <div
-                        className={
-                            showAll
-                                ? 'scrollbar-hide grid grid-cols-2 gap-6 py-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'
-                                : 'scrollbar-hide flex gap-6 overflow-x-auto py-3 pb-6'
-                        }
-                    >
-                        {loadingMovies &&
-                            Array.from({ length: 5 }).map((_, i) => (
-                                <div key={i} className="h-75 w-55 animate-pulse rounded-2xl bg-zinc-800" />
-                            ))}
-
-                        {!loadingMovies &&
-                            !recommendedMovies &&
-                            !showAll &&
-                            movies?.slice(0, 20).map((movie) => (
-                                <div key={movie.id} className={showAll ? '' : 'w-60 shrink-0'}>
-                                    <MovieCard movie={movie} />
-                                </div>
-                            ))}
-
-                        {/*Show recommended movies if user is logged in*/}
-                        {!loadingMovies &&
-                            recommendedMovies &&
-                            !showAll &&
-                            recommendedMovies?.slice(0, 20).map((movie) => (
-                                <div key={movie.id} className={showAll ? '' : 'w-60 shrink-0'}>
-                                    <MovieCard movie={movie} />
-                                </div>
-                            ))}
-
-                        {!loadingMovies &&
-                            !recommendedMovies &&
-                            showAll &&
-                            movies?.map((movie) => (
-                                <div key={movie.id} className={showAll ? '' : 'w-60 shrink-0'}>
-                                    <MovieCard movie={movie} />
-                                </div>
-                            ))}
-
-                        {!loadingMovies &&
-                            recommendedMovies &&
-                            showAll &&
-                            recommendedMovies?.map((movie) => (
-                                <div key={movie.id} className={showAll ? '' : 'w-60 shrink-0'}>
-                                    <MovieCard movie={movie} />
-                                </div>
-                            ))}
-                    </div>
-
-                    <div className="mt-10 text-center">
-                        <button
-                            onClick={() => setShowAll(!showAll)}
-                            className="hover:border-primary cursor-pointer rounded border border-gray-600 px-6 py-2 transition hover:text-red-500"
-                        >
-                            {showAll ? 'Show Less' : 'View All'}
-                        </button>
-                    </div>
-                </section>
-
-                <section className="py-16">
-                    <h2 className="mb-8 text-center text-2xl font-semibold">Browse By Categories</h2>
-                    <div className="grid grid-cols-2 gap-6 md:grid-cols-3">
-                        {categories.map((category, index) => (
-                            <Link href={`/movies?category=${encodeURIComponent(category)}`} key={index}>
-                                <div className="cursor-pointer rounded-xl border border-gray-700 bg-[#111] py-6 text-center transition hover:border-red-600">
-                                    <h3 className="text-lg font-normal">{category}</h3>
-                                </div>
-                            </Link>
+                {!oneSecondPassed && (
+                    <div className="scrollbar-hide flex gap-6 overflow-x-auto py-3 pb-6">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                            <div key={i} className="h-75 w-55 animate-pulse rounded-2xl bg-zinc-800" />
                         ))}
                     </div>
-                </section>
+                )}
+
+                {oneSecondPassed && (
+                    <section>
+                        <h2 className="mb-2 text-center text-2xl font-semibold">
+                            {!loadingMovies && (session ? 'Recommended for you' : 'Popular Movies')}
+                        </h2>
+
+                        <div
+                            className={
+                                showAll
+                                    ? 'scrollbar-hide grid grid-cols-2 gap-6 py-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'
+                                    : 'scrollbar-hide flex gap-6 overflow-x-auto py-3 pb-6'
+                            }
+                        >
+                            {loadingMovies &&
+                                Array.from({ length: 5 }).map((_, i) => (
+                                    <div key={i} className="h-75 w-55 animate-pulse rounded-2xl bg-zinc-800" />
+                                ))}
+
+                            {!loadingMovies &&
+                                !recommendedMovies &&
+                                !showAll &&
+                                movies?.slice(0, 20).map((movie) => (
+                                    <div key={movie.id} className={showAll ? '' : 'w-60 shrink-0'}>
+                                        <MovieCard movie={movie} />
+                                    </div>
+                                ))}
+
+                            {/*Show recommended movies if user is logged in*/}
+                            {!loadingMovies &&
+                                recommendedMovies &&
+                                !showAll &&
+                                recommendedMovies?.slice(0, 20).map((movie) => (
+                                    <div key={movie.id} className={showAll ? '' : 'w-60 shrink-0'}>
+                                        <MovieCard movie={movie} />
+                                    </div>
+                                ))}
+
+                            {!loadingMovies &&
+                                !recommendedMovies &&
+                                showAll &&
+                                movies?.map((movie) => (
+                                    <div key={movie.id} className={showAll ? '' : 'w-60 shrink-0'}>
+                                        <MovieCard movie={movie} />
+                                    </div>
+                                ))}
+
+                            {!loadingMovies &&
+                                recommendedMovies &&
+                                showAll &&
+                                recommendedMovies?.map((movie) => (
+                                    <div key={movie.id} className={showAll ? '' : 'w-60 shrink-0'}>
+                                        <MovieCard movie={movie} />
+                                    </div>
+                                ))}
+                        </div>
+
+                        <div className="mt-10 text-center">
+                            <button
+                                onClick={() => setShowAll(!showAll)}
+                                className="hover:border-primary cursor-pointer rounded border border-gray-600 px-6 py-2 transition hover:text-red-500"
+                            >
+                                {showAll ? 'Show Less' : 'View All'}
+                            </button>
+                        </div>
+                    </section>
+                )}
+
+                {oneSecondPassed && (
+                    <section className="py-16">
+                        <h2 className="mb-8 text-center text-2xl font-semibold">Browse By Categories</h2>
+                        <div className="grid grid-cols-2 gap-6 md:grid-cols-3">
+                            {categories.map((category, index) => (
+                                <Link href={`/movies?category=${encodeURIComponent(category)}`} key={index}>
+                                    <div className="cursor-pointer rounded-xl border border-gray-700 bg-[#111] py-6 text-center transition hover:border-red-600">
+                                        <h3 className="text-lg font-normal">{category}</h3>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </section>
+                )}
             </main>
         </div>
     );

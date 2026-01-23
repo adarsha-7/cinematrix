@@ -70,7 +70,7 @@ export default function SignupPage() {
 
     return (
         <div className="flex min-h-screen items-center justify-center p-4">
-            <div className="flex min-h-[600px] w-full max-w-6xl overflow-hidden rounded-lg bg-white shadow-2xl">
+            <div className="flex min-h-150 w-full max-w-6xl overflow-hidden rounded-lg bg-white shadow-2xl">
                 <div className="flex w-full items-center p-12 md:w-1/2">
                     <form onSubmit={handleSubmit} className="mx-auto w-full max-w-md">
                         <h1 className="mb-2 text-center font-serif text-4xl font-light text-gray-800">

@@ -3,12 +3,11 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Play } from 'lucide-react';
-import Navbar from './components/Navbar';
-import MovieCard from './components/MovieCard';
+import MovieCard from '@/app/components/MovieCard';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
-import type { MovieData } from './types';
-import { categories } from './data';
+import type { MovieData } from '@/app/types';
+import { categories } from '@/app/data';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -45,7 +44,7 @@ export default function Homepage() {
             }
         }
         getMovies();
-    }, []);
+    }, [session]);
 
     useEffect(() => {
         async function getRecommendedMovies() {
@@ -60,6 +59,10 @@ export default function Homepage() {
             }
         }
         getRecommendedMovies();
+    }, [session]);
+
+    useEffect(() => {
+        if (!session) setRecommendedMovies(null);
     }, [session]);
 
     // api call on interaction and session exists
@@ -85,10 +88,6 @@ export default function Homepage() {
 
     return (
         <div>
-            <div className="fixed top-0 left-0 z-50 w-full">
-                <Navbar />
-            </div>
-
             <main className="pt-20">
                 <section className="relative flex h-[50vh] items-center justify-center text-center">
                     <div className="bg-liner-to-b absolute inset-0 from-black/10 via-black/5 to-transparent"></div>
@@ -142,6 +141,7 @@ export default function Homepage() {
                                 ))}
 
                             {!loadingMovies &&
+                                !session &&
                                 !recommendedMovies &&
                                 !showAll &&
                                 movies?.slice(0, 20).map((movie) => (
@@ -152,6 +152,7 @@ export default function Homepage() {
 
                             {/*Show recommended movies if user is logged in*/}
                             {!loadingMovies &&
+                                session &&
                                 recommendedMovies &&
                                 !showAll &&
                                 recommendedMovies?.slice(0, 20).map((movie) => (
@@ -161,6 +162,7 @@ export default function Homepage() {
                                 ))}
 
                             {!loadingMovies &&
+                                !session &&
                                 !recommendedMovies &&
                                 showAll &&
                                 movies?.map((movie) => (
@@ -170,6 +172,7 @@ export default function Homepage() {
                                 ))}
 
                             {!loadingMovies &&
+                                session &&
                                 recommendedMovies &&
                                 showAll &&
                                 recommendedMovies?.map((movie) => (

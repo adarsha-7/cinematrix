@@ -4,7 +4,6 @@ import { useState, useEffect, ChangeEvent, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Upload } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import Navbar from '../components/Navbar';
 import type { UserProfile } from '../types';
 import { uploadImage } from '@/lib/upload-image';
 import { authClient } from '@/lib/auth-client';
@@ -76,10 +75,6 @@ export default function UserProfilePage() {
 
     return (
         <div>
-            <div className="fixed top-0 left-0 z-50 w-full bg-black">
-                <Navbar />
-            </div>
-
             <main className="mx-auto mt-24 max-w-4xl px-6 py-16">
                 <h1 className="mb-8 text-center text-3xl font-bold">User Profile</h1>
 

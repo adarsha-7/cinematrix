@@ -1,4 +1,3 @@
-import Navbar from '../components/Navbar';
 import { Mail, Phone, Clapperboard } from 'lucide-react';
 
 export default function AboutPage() {
@@ -10,10 +9,6 @@ export default function AboutPage() {
 
     return (
         <div>
-            <div className="fixed top-0 left-0 z-50 w-full">
-                <Navbar />
-            </div>
-
             <main className="mx-auto mt-5 max-w-6xl space-y-10 px-6 py-30">
                 <section className="rounded-xl border border-gray-400/40 bg-[#111] p-8">
                     <h2 className="mb-6 text-3xl font-bold text-white">About Cinematrix</h2>

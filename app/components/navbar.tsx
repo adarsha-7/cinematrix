@@ -51,7 +51,7 @@ export default function Navbar() {
                     <input
                         type="text"
                         placeholder="Search movies, TV shows..."
-                        className="w-full rounded-3xl bg-neutral-200 py-2 pr-4 pl-11 text-sm text-neutral-800 placeholder:text-neutral-400 focus:outline-none"
+                        className="w-full rounded-3xl bg-neutral-200 py-2 pr-4 pl-11 text-sm font-semibold text-neutral-800 placeholder:text-neutral-400 focus:outline-none"
                     />
                 </div>
 

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Film } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
 import { useAuth } from '@/context/AuthContext';
-import type { SignupForm } from '../types';
+import type { SignupForm } from '../../types';
 
 export default function LoginPage() {
     const router = useRouter();

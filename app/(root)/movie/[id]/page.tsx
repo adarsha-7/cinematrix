@@ -1,4 +1,3 @@
-import Navbar from '@/app/components/Navbar';
 import RateSection from '@/app/components/Rate';
 import WatchlistSection from '@/app/components/Watchlist';
 import MovieClick from '@/app/components/MovieClick';
@@ -63,10 +62,6 @@ export default async function MovieDetailsPage({ params }: { params: Promise<{ i
 
     return (
         <div>
-            <div className="fixed top-0 left-0 z-50 w-full">
-                <Navbar />
-            </div>
-
             <main className="pt-20">
                 {/*Store click interaction if user authenticated */}
                 <MovieClick movieId={id} />

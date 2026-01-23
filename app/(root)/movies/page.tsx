@@ -2,14 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import Navbar from '../components/Navbar';
-import MovieCard from '../components/MovieCard';
-import Pagination from '../components/Pagination';
-import Select from '../components/Select';
+import MovieCard from '@/app/components/MovieCard';
+import Pagination from '@/app/components/Pagination';
+import Select from '@/app/components/Select';
 import { useAuth } from '@/context/AuthContext';
-import type { MovieData } from '../types';
+import type { MovieData } from '@/app/types';
 
-import { categories } from '../data';
+import { categories } from '@/app/data';
 const genres = categories;
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -119,10 +118,6 @@ export default function Moviepage() {
 
     return (
         <div>
-            <div className="fixed top-0 left-0 z-50 w-full">
-                <Navbar />
-            </div>
-
             <main className="mx-auto flex max-w-7xl flex-col py-16 pt-30">
                 <div className="flex flex-col gap-5">
                     <h1 className="text-center text-4xl font-bold md:text-5xl">

@@ -1,5 +1,6 @@
 import Navbar from '@/app/components/Navbar';
 import RateSection from '@/app/components/Rate';
+import WatchlistSection from '@/app/components/Watchlist';
 import { Star, Plus } from 'lucide-react';
 import Link from 'next/link';
 import type { MovieData } from '@/app/types';
@@ -98,7 +99,7 @@ export default async function MovieDetailsPage({ params }: { params: Promise<{ i
                         </div>
                     )}
 
-                    <RateSection id={id} />
+                    <RateSection id={id} type="movie" />
 
                     {/* Cast */}
                     {movieData.cast && (

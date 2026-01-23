@@ -473,6 +473,7 @@ model Rating {
   createdAt DateTime @default(now())
 
   @@unique([userId, movieId])
+  @@unique([userId, tvShowId])
 }
 
 //////////////////////

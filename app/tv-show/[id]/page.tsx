@@ -90,7 +90,7 @@ export default async function TVShowDetailsPage({ params }: { params: { id: stri
                         </div>
                     )}
 
-                    <RateSection id={id} />
+                    <RateSection id={id} type="tv-show" />
 
                     {/* Cast */}
                     {cast.length > 0 && (

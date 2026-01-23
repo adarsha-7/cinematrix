@@ -6,7 +6,7 @@ import { Star, X } from 'lucide-react';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-export default function RateSection({ id }: { id: string }) {
+export default function RateSection({ id, type }: { id: string; type: string }) {
     const [userRating, setUserRating] = useState<number | null>(null);
     const [open, setOpen] = useState<boolean>(false);
     const [hovered, setHovered] = useState<number | null>(null);
@@ -16,8 +16,12 @@ export default function RateSection({ id }: { id: string }) {
 
     const getRating = async () => {
         try {
-            const res = await fetch(`${BASE_URL}/api/user/rating?movieId=${encodeURIComponent(id)}`);
+            const queryParam =
+                type === 'movie' ? `movieId=${encodeURIComponent(id)}` : `tvShowId=${encodeURIComponent(id)}`;
+
+            const res = await fetch(`${BASE_URL}/api/user/rating?${queryParam}`);
             const { rating } = await res.json();
+
             if (rating !== null && rating !== undefined) {
                 setUserRating(rating);
             }
@@ -29,20 +33,26 @@ export default function RateSection({ id }: { id: string }) {
     const submitRating = async () => {
         if (selected == null) return;
         try {
-            await Promise.all([
-                fetch(`${BASE_URL}/api/user/rating?movieId=${encodeURIComponent(id)}&rating=${selected}`, {
-                    method: 'POST',
-                }),
-                fetch(`${BASE_URL}/api/user/interaction`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        movieId: Number(id),
-                        type: 'RATED',
-                        value: selected,
+            if (type == 'movie') {
+                await Promise.all([
+                    fetch(`${BASE_URL}/api/user/rating?movieId=${encodeURIComponent(id)}&rating=${selected}`, {
+                        method: 'POST',
                     }),
-                }),
-            ]);
+                    fetch(`${BASE_URL}/api/user/interaction`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            movieId: Number(id),
+                            type: 'RATED',
+                            value: selected,
+                        }),
+                    }),
+                ]);
+            } else {
+                await fetch(`${BASE_URL}/api/user/rating?tvShowId=${encodeURIComponent(id)}&rating=${selected}`, {
+                    method: 'POST',
+                });
+            }
             setUserRating(selected);
         } catch (err) {
             console.error('Error updating rating or recording interaction', err);

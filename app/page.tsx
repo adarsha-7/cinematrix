@@ -1,24 +1,193 @@
-import { Suspense } from 'react';
+'use client';
+
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Play } from 'lucide-react';
+import Navbar from './components/Navbar';
+import MovieCard from './components/MovieCard';
+import { useAuth } from '@/context/AuthContext';
+import { toast } from 'sonner';
+import type { MovieData } from './types';
+import { categories } from './data';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-async function AboutText() {
-    const res = await fetch(`${BASE_URL}/api/about`);
-    const { aboutText } = await res.json();
-    return <p className="w-100 text-center text-lg">{aboutText}</p>;
-}
+export default function Homepage() {
+    const [showAll, setShowAll] = useState(false);
+    const [movies, setMovies] = useState<MovieData[] | null>(null);
+    const [recommendedMovies, setRecommendedMovies] = useState<MovieData[] | null>(null);
+    const [loadingMovies, setLoadingMovies] = useState(true);
 
-function AboutLoading() {
-    return <p className="w-100 text-center text-lg">Loading about text...</p>;
-}
+    const { session } = useAuth();
 
-export default async function Home() {
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            const message = sessionStorage.getItem('toast');
+            if (message) {
+                toast.success(message, { duration: 3000 });
+                sessionStorage.removeItem('toast');
+            }
+        }, 100);
+        return () => clearTimeout(timer);
+    }, []);
+
+    useEffect(() => {
+        async function getMovies() {
+            try {
+                setLoadingMovies(true);
+                const res = await fetch(`${BASE_URL}/api/movies?sort=popular&page=1`);
+                const { moviesData } = await res.json();
+                setMovies(moviesData);
+            } catch (err) {
+                console.error('Error fetching movies', err);
+            } finally {
+                setLoadingMovies(false);
+            }
+        }
+        getMovies();
+    }, []);
+
+    useEffect(() => {
+        async function getRecommendedMovies() {
+            try {
+                if (session) {
+                    const res = await fetch(`${BASE_URL}/api/movies?sort=recommended&page=1`);
+                    const { moviesData } = await res.json();
+                    setRecommendedMovies(moviesData);
+                }
+            } catch (err) {
+                console.error('Error fetching movies', err);
+            }
+        }
+        getRecommendedMovies();
+    }, [session]);
+
+    // api call on interaction and session exists
+    async function saveInteraction(movieId: string, type: string, value?: number) {
+        try {
+            const res = await fetch(`${BASE_URL}/api/interaction`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    movieId,
+                    type,
+                    value,
+                }),
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     return (
-        <main className="flex flex-col items-center gap-10">
-            <h1 className="mt-5 text-center text-3xl">Welcome To Cinematrix!</h1>
-            <Suspense fallback={<AboutLoading />}>
-                <AboutText />
-            </Suspense>
-        </main>
+        <div>
+            <div className="fixed top-0 left-0 z-50 w-full">
+                <Navbar />
+            </div>
+
+            <main className="pt-20">
+                <section className="relative flex h-[50vh] items-center justify-center text-center">
+                    <div className="bg-liner-to-b absolute inset-0 from-black/10 via-black/5 to-transparent"></div>
+                    <img src="/hero.png" alt="Hero" className="relative max-h-[100%] w-auto opacity-70" />
+                    <div className="absolute px-6">
+                        <h1 className="text-3xl font-bold text-white md:text-4xl lg:text-[42px]">
+                            Experience <span className="text-primary">Cinema</span> Like Never Before
+                        </h1>
+                        <p className="mx-auto mt-3 max-w-2xl text-sm text-gray-200">
+                            Discover, review, and celebrate cinema from blockbusters to indie gems.
+                        </p>
+                        <div className="mt-6 flex justify-center gap-4">
+                            <Link href="/movies">
+                                <button className="bg-primary hover:bg-primary-hover flex cursor-pointer items-center gap-2 rounded-md px-5 py-2 text-sm md:text-base">
+                                    <Play size={16} /> Movies
+                                </button>
+                            </Link>
+                            <Link href="/tv-shows">
+                                <button className="bg-primary hover:bg-primary-hover flex cursor-pointer items-center gap-2 rounded-md px-5 py-2 text-sm md:text-base">
+                                    <Play size={16} /> TV Shows
+                                </button>
+                            </Link>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 className="mb-2 text-center text-2xl font-semibold">
+                        {!loadingMovies && (session ? 'Recommended for you' : 'Popular Movies')}
+                    </h2>
+
+                    <div
+                        className={
+                            showAll
+                                ? 'scrollbar-hide grid grid-cols-2 gap-6 py-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'
+                                : 'scrollbar-hide flex gap-6 overflow-x-auto py-3 pb-6'
+                        }
+                    >
+                        {loadingMovies &&
+                            Array.from({ length: 5 }).map((_, i) => (
+                                <div key={i} className="h-75 w-55 animate-pulse rounded-2xl bg-zinc-800" />
+                            ))}
+
+                        {!loadingMovies &&
+                            !recommendedMovies &&
+                            !showAll &&
+                            movies?.slice(0, 20).map((movie) => (
+                                <div key={movie.id} className={showAll ? '' : 'w-60 shrink-0'}>
+                                    <MovieCard movie={movie} />
+                                </div>
+                            ))}
+
+                        {/*Show recommended movies if user is logged in*/}
+                        {!loadingMovies &&
+                            recommendedMovies &&
+                            !showAll &&
+                            recommendedMovies?.slice(0, 20).map((movie) => (
+                                <div key={movie.id} className={showAll ? '' : 'w-60 shrink-0'}>
+                                    <MovieCard movie={movie} />
+                                </div>
+                            ))}
+
+                        {!loadingMovies &&
+                            !recommendedMovies &&
+                            showAll &&
+                            movies?.map((movie) => (
+                                <div key={movie.id} className={showAll ? '' : 'w-60 shrink-0'}>
+                                    <MovieCard movie={movie} />
+                                </div>
+                            ))}
+
+                        {!loadingMovies &&
+                            recommendedMovies &&
+                            showAll &&
+                            recommendedMovies?.map((movie) => (
+                                <div key={movie.id} className={showAll ? '' : 'w-60 shrink-0'}>
+                                    <MovieCard movie={movie} />
+                                </div>
+                            ))}
+                    </div>
+
+                    <div className="mt-10 text-center">
+                        <button
+                            onClick={() => setShowAll(!showAll)}
+                            className="hover:border-primary cursor-pointer rounded border border-gray-600 px-6 py-2 transition hover:text-red-500"
+                        >
+                            {showAll ? 'Show Less' : 'View All'}
+                        </button>
+                    </div>
+                </section>
+
+                <section className="py-16">
+                    <h2 className="mb-8 text-center text-2xl font-semibold">Browse By Categories</h2>
+                    <div className="grid grid-cols-2 gap-6 md:grid-cols-3">
+                        {categories.map((category, index) => (
+                            <Link href={`/movies?category=${encodeURIComponent(category)}`} key={index}>
+                                <div className="cursor-pointer rounded-xl border border-gray-700 bg-[#111] py-6 text-center transition hover:border-red-600">
+                                    <h3 className="text-lg font-normal">{category}</h3>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </section>
+            </main>
+        </div>
     );
 }

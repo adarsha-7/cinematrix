@@ -25,11 +25,11 @@ export default function Navbar() {
                 },
                 onSuccess: () => {
                     toast.success('Signed out successfully', { id: toastId, duration: 3000 });
-                    router.push('/home');
+                    router.push('/');
                 },
                 onError: () => {
                     toast.error('Error signing out', { id: toastId, duration: 3000 });
-                    router.push('/home');
+                    router.push('/');
                 },
             },
         });
@@ -39,7 +39,7 @@ export default function Navbar() {
     return (
         <nav className="border-b border-neutral-800 bg-black">
             <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-3 sm:px-6 lg:gap-10 lg:px-8">
-                <Link href="/home" className="flex items-center gap-2">
+                <Link href="/" className="flex items-center gap-2">
                     <span className="bg-primary rounded p-1.5">
                         <Film className="h-5 w-5 text-white" />
                     </span>
@@ -85,7 +85,7 @@ export default function Navbar() {
                         </button>
 
                         {open && (
-                            <div className="absolute right-0 mt-5 w-36 rounded-sm bg-neutral-900 py-1 shadow-lg ring-1 ring-neutral-800">
+                            <div className="absolute right-0 mt-6 w-36 rounded-sm bg-neutral-900 py-1 shadow-lg ring-1 ring-neutral-800">
                                 {session && (
                                     <Link
                                         href="/user-profile"

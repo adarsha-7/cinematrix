@@ -104,7 +104,7 @@ export default function WatchlistSection({ id, type }: { id: string; type: 'movi
                             onClick={toggleWatchlist}
                             className={`w-full rounded-md py-2 font-semibold transition ${
                                 inWatchlist
-                                    ? 'cursor-pointer bg-red-500 text-black hover:bg-red-600'
+                                    ? 'cursor-pointer bg-red-700 text-white hover:bg-red-800'
                                     : 'cursor-pointer bg-yellow-500 text-black hover:bg-yellow-600'
                             }`}
                         >

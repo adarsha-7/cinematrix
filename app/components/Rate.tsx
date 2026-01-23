@@ -164,7 +164,7 @@ export default function RateSection({ id, type }: { id: string; type: 'movie' | 
                         {userRating && (
                             <button
                                 onClick={() => deleteRating()}
-                                className="mt-2 w-full cursor-pointer rounded-md bg-red-800 py-2 transition hover:bg-red-900"
+                                className="mt-2 w-full cursor-pointer rounded-md bg-gray-700 py-2 transition hover:bg-red-800"
                             >
                                 Remove Rating
                             </button>

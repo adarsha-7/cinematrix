@@ -13,7 +13,7 @@ export default function SignupPage() {
     const { session } = useAuth();
     useEffect(() => {
         if (session?.user) {
-            router.push('/home');
+            router.push('/');
         }
     }, [session, router]);
 
@@ -32,7 +32,7 @@ export default function SignupPage() {
         const { name, email, password } = formData;
 
         await authClient.signUp.email(
-            { email, password, name: name, callbackURL: '/home' },
+            { email, password, name: name, callbackURL: '/' },
             {
                 onRequest: () => {
                     setLoading(true);
@@ -41,7 +41,7 @@ export default function SignupPage() {
                 onSuccess: () => {
                     setLoading(false);
                     sessionStorage.setItem('toast', 'Signed in successfully');
-                    router.push('/home');
+                    router.push('/');
                 },
                 onError: (ctx) => {
                     setLoading(false);
@@ -57,9 +57,9 @@ export default function SignupPage() {
 
         const { error } = await authClient.signIn.social({
             provider: 'google',
-            callbackURL: '/home',
+            callbackURL: '/',
             errorCallbackURL: '/error',
-            newUserCallbackURL: '/home',
+            newUserCallbackURL: '/',
         });
 
         setLoading(false);

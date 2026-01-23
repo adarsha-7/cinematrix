@@ -28,12 +28,30 @@ const mapMovie = (movie: any) => ({
     productionCountries: movie.productionCountries.map((c: any) => c.country.name),
 });
 
-async function getMovies(page: number, genres: string[], sort: string) {
+async function getWatchedMovieIds(userId: string) {
+    const rated = await prisma.rating.findMany({
+        where: { userId, movieId: { not: null } },
+        select: { movieId: true },
+    });
+
+    return rated.map((r) => r.movieId!);
+}
+
+async function getMovies(page: number, genres: string[], sort: string, hideWatched: boolean, userId?: string) {
+    let watchedIds: number[] = [];
+
+    if (hideWatched && userId) {
+        watchedIds = await getWatchedMovieIds(userId);
+    }
+
     const movies = await prisma.movie.findMany({
-        where: genres.length ? { genres: { some: { genre: { name: { in: genres } } } } } : {},
-        orderBy: (sort == 'popular' && { voteCount: 'desc' }) ||
-            (sort == 'newest' && { releaseDate: 'desc' }) ||
-            (sort == 'oldest' && { releaseDate: 'asc' }) || { voteCount: 'desc' },
+        where: {
+            ...(genres.length ? { genres: { some: { genre: { name: { in: genres } } } } } : {}),
+            ...(hideWatched && watchedIds.length ? { id: { notIn: watchedIds } } : {}),
+        },
+        orderBy: (sort === 'popular' && { voteCount: 'desc' }) ||
+            (sort === 'newest' && { releaseDate: 'desc' }) ||
+            (sort === 'oldest' && { releaseDate: 'asc' }) || { voteCount: 'desc' },
         skip: 50 * (page - 1),
         take: 50,
         select: {
@@ -75,17 +93,19 @@ async function getRecommendedMovies(page: number, genres: string[], hideWatched:
 
     if (!rec || rec.recommendations.length === 0) return [];
 
-    const pageSize = 50;
-    const start = pageSize * (page - 1);
-    const end = start + pageSize;
+    let recommendationIds = rec.recommendations.map(Number);
 
-    const pagedIds = rec.recommendations.slice(start, end).map((id) => Number(id));
+    if (hideWatched) {
+        const watchedIds = await getWatchedMovieIds(userId);
+        const watchedSet = new Set(watchedIds);
+        recommendationIds = recommendationIds.filter((id) => !watchedSet.has(id));
+    }
 
-    if (!pagedIds.length) return [];
+    if (!recommendationIds.length) return [];
 
     const movies = await prisma.movie.findMany({
         where: {
-            id: { in: pagedIds },
+            id: { in: recommendationIds },
             ...(genres.length ? { genres: { some: { genre: { name: { in: genres } } } } } : {}),
         },
         select: {
@@ -116,17 +136,18 @@ async function getRecommendedMovies(page: number, genres: string[], hideWatched:
         },
     });
 
-    // Preserve recommendation order
-    const orderMap = new Map(pagedIds.map((id, i) => [id, i]));
+    const orderMap = new Map(recommendationIds.map((id, i) => [id, i]));
     movies.sort((a, b) => orderMap.get(a.id)! - orderMap.get(b.id)!);
 
-    return movies.map(mapMovie);
+    const start = 50 * (page - 1);
+    return movies.slice(start, start + 50).map(mapMovie);
 }
 
 export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
+
     const sort = searchParams.get('sort');
-    const hideWatched = Boolean(searchParams.get('hideWatched'));
+    const hideWatched = searchParams.get('hideWatched') === 'true';
     const page = Number(searchParams.get('page'));
     const genres = searchParams.getAll('genres');
 
@@ -139,16 +160,14 @@ export async function GET(req: NextRequest) {
     });
 
     try {
-        let moviesData: any;
-        if (sort == 'recommended') {
-            if (session) {
-                moviesData = await getRecommendedMovies(page, genres, hideWatched, session.user.id);
-            } else {
-                moviesData = [];
-            }
+        let moviesData: any[] = [];
+
+        if (sort === 'recommended') {
+            moviesData = session ? await getRecommendedMovies(page, genres, hideWatched, session.user.id) : [];
         } else {
-            moviesData = await getMovies(page, genres, sort);
+            moviesData = await getMovies(page, genres, sort, hideWatched, session?.user.id);
         }
+
         return NextResponse.json(
             { moviesData },
             {

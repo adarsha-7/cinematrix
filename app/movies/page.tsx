@@ -113,6 +113,10 @@ export default function Moviepage() {
         }
     };
 
+    useEffect(() => {
+        setPage(1);
+    }, [hideWatched]);
+
     return (
         <div>
             <div className="fixed top-0 left-0 z-50 w-full">
@@ -153,7 +157,7 @@ export default function Moviepage() {
                         selectedOption={sort}
                         setSelectedOption={setSort}
                     ></Select>
-                    {movies?.length != 0 && sort == 'recommended' && (
+                    {movies?.length != 0 && (
                         <label className="mt-6 flex cursor-pointer items-center gap-3 text-sm">
                             <span className="relative flex h-5 w-5 items-center justify-center">
                                 <input

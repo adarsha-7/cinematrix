@@ -13,7 +13,7 @@ export default function LoginPage() {
     const { session } = useAuth();
     useEffect(() => {
         if (session?.user) {
-            router.push('/home');
+            router.push('/');
         }
     }, [session, router]);
 
@@ -32,7 +32,7 @@ export default function LoginPage() {
         const { email, password } = formData;
 
         await authClient.signIn.email(
-            { email, password, callbackURL: '/home', rememberMe: true },
+            { email, password, callbackURL: '/', rememberMe: true },
             {
                 onRequest: () => {
                     setLoading(true);
@@ -41,7 +41,7 @@ export default function LoginPage() {
                 onSuccess: () => {
                     setLoading(false);
                     sessionStorage.setItem('toast', 'Logged in successfully');
-                    router.push('/home');
+                    router.push('/');
                 },
                 onError: (ctx) => {
                     setLoading(false);
@@ -57,9 +57,9 @@ export default function LoginPage() {
 
         const { error } = await authClient.signIn.social({
             provider: 'google',
-            callbackURL: '/home',
+            callbackURL: '/',
             errorCallbackURL: '/error',
-            newUserCallbackURL: '/home',
+            newUserCallbackURL: '/',
         });
 
         setLoading(false);

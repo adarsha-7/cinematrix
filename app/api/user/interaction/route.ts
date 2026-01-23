@@ -128,3 +128,33 @@ export async function POST(req: NextRequest) {
         message: 'stored interaction successfully',
     });
 }
+
+export async function DELETE(req: NextRequest) {
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+
+    if (!session) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { movieId, type } = await req.json();
+
+    if (typeof movieId !== 'number' || (type !== 'RATED' && type !== 'WATCHLIST')) {
+        return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+    }
+
+    try {
+        await prisma.userInteractionMovies.deleteMany({
+            where: {
+                userId: session.user.id,
+                movieId,
+                type,
+            },
+        });
+
+        return NextResponse.json({ message: 'Interaction deleted successfully' });
+    } catch {
+        return NextResponse.json({ error: 'Failed to delete interaction' }, { status: 500 });
+    }
+}

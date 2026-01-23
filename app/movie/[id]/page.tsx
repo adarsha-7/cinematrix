@@ -76,9 +76,7 @@ export default async function MovieDetailsPage({ params }: { params: Promise<{ i
                             )}
 
                             <div className="mt-6 flex gap-4">
-                                <button className="flex items-center gap-2 rounded-md bg-gray-700 px-6 py-2 transition hover:bg-gray-600">
-                                    <Plus size={18} /> Add to Watchlist
-                                </button>
+                                <WatchlistSection id={id} type="movie" />
                             </div>
                         </div>
                     </div>

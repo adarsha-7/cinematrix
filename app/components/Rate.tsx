@@ -6,7 +6,7 @@ import { Star, X } from 'lucide-react';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-export default function RateSection({ id, type }: { id: string; type: string }) {
+export default function RateSection({ id, type }: { id: string; type: 'movie' | 'tv-show' }) {
     const [userRating, setUserRating] = useState<number | null>(null);
     const [open, setOpen] = useState<boolean>(false);
     const [hovered, setHovered] = useState<number | null>(null);
@@ -59,12 +59,42 @@ export default function RateSection({ id, type }: { id: string; type: string }) 
         }
     };
 
-    useEffect(() => {
-        if (session) getRating();
-    }, [session, id]);
+    const deleteRating = async () => {
+        try {
+            if (type == 'movie') {
+                await Promise.all([
+                    fetch(`${BASE_URL}/api/user/rating?movieId=${id}`, {
+                        method: 'DELETE',
+                    }),
+                    fetch(`${BASE_URL}/api/user/interaction`, {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            movieId: Number(id),
+                            type: 'RATED',
+                        }),
+                    }),
+                ]);
+            } else {
+                await fetch(`${BASE_URL}/api/user/rating?tvShowId=${id}`, {
+                    method: 'DELETE',
+                });
+            }
+            setUserRating(null);
+            setSelected(null);
+            setHovered(null);
+            setOpen(false);
+        } catch (err) {
+            console.error('Error removing rating', err);
+        }
+    };
 
     useEffect(() => {
-        if (userRating) setSelected(userRating);
+        if (session) getRating();
+    }, [id]);
+
+    useEffect(() => {
+        if (userRating != null) setSelected(userRating);
     }, [userRating]);
 
     return (
@@ -130,6 +160,15 @@ export default function RateSection({ id, type }: { id: string; type: string }) 
                         >
                             Rate
                         </button>
+
+                        {userRating && (
+                            <button
+                                onClick={() => deleteRating()}
+                                className="mt-2 w-full cursor-pointer rounded-md bg-red-800 py-2 transition hover:bg-red-900"
+                            >
+                                Remove Rating
+                            </button>
+                        )}
                     </div>
                 </div>
             )}

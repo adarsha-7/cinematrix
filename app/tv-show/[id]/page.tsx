@@ -1,5 +1,6 @@
 import Navbar from '@/app/components/Navbar';
 import RateSection from '@/app/components/Rate';
+import WatchlistSection from '@/app/components/Watchlist';
 import { Star, Plus } from 'lucide-react';
 import Link from 'next/link';
 import type { TVShowData } from '@/app/types';
@@ -67,9 +68,7 @@ export default async function TVShowDetailsPage({ params }: { params: { id: stri
                             </div>
 
                             <div className="mt-6 flex gap-4">
-                                <button className="flex items-center gap-2 rounded-md bg-gray-700 px-6 py-2 hover:bg-gray-600">
-                                    <Plus size={18} /> Add to Watchlist
-                                </button>
+                                <WatchlistSection id={id} type="tv-show" />
                             </div>
                         </div>
                     </div>

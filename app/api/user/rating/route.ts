@@ -86,3 +86,32 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message: 'Invalid request' }, { status: 400 });
 }
+
+export async function DELETE(req: NextRequest) {
+    const session = await auth.api.getSession(req);
+
+    if (!session?.user?.id) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
+    const movieId = req.nextUrl.searchParams.get('movieId');
+    const tvShowId = req.nextUrl.searchParams.get('tvShowId');
+
+    if (!movieId && !tvShowId) {
+        return NextResponse.json({ message: 'No movieId or tvShowId provided' }, { status: 400 });
+    }
+
+    try {
+        await prisma.rating.deleteMany({
+            where: {
+                userId: session.user.id,
+                ...(movieId ? { movieId: Number(movieId) } : { tvShowId: Number(tvShowId) }),
+            },
+        });
+
+        return NextResponse.json({ message: 'Rating removed successfully' });
+    } catch (err) {
+        console.error(err);
+        return NextResponse.json({ message: 'Failed to remove rating' }, { status: 500 });
+    }
+}

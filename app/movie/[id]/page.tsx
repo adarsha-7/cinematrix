@@ -1,9 +1,13 @@
 import Navbar from '@/app/components/Navbar';
 import RateSection from '@/app/components/Rate';
 import WatchlistSection from '@/app/components/Watchlist';
-import { Star, Plus } from 'lucide-react';
+import MovieClick from '@/app/components/MovieClick';
+import { Star } from 'lucide-react';
 import Link from 'next/link';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 import type { MovieData } from '@/app/types';
+import { prisma } from '@/lib/prisma';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const IMAGE_BASE = 'https://image.tmdb.org/t/p/w1280';
@@ -17,6 +21,46 @@ export default async function MovieDetailsPage({ params }: { params: Promise<{ i
     const { movieData }: { movieData: MovieData } = await res.json();
     if (!movieData) throw new Error('Movie not found');
 
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+
+    async function saveInteraction() {
+        if (!session || !id) return;
+        try {
+            await prisma.userInteractionMovies.deleteMany({
+                where: {
+                    userId: session.user.id,
+                    movieId: Number(id),
+                    type: 'CLICK',
+                },
+            });
+
+            await Promise.all([
+                prisma.userInteractionMovies.create({
+                    data: {
+                        userId: session.user.id,
+                        movieId: Number(id),
+                        type: 'CLICK',
+                    },
+                }),
+
+                prisma.user.update({
+                    where: { id: session.user.id },
+                    data: {
+                        interactionCount: {
+                            increment: 0.25,
+                        },
+                    },
+                    select: { interactionCount: true },
+                }),
+            ]);
+        } catch (err) {
+            console.error('Failed to save interaction', err);
+        }
+    }
+    await saveInteraction();
+
     return (
         <div>
             <div className="fixed top-0 left-0 z-50 w-full">
@@ -24,6 +68,8 @@ export default async function MovieDetailsPage({ params }: { params: Promise<{ i
             </div>
 
             <main className="pt-20">
+                {/*Store click interaction if user authenticated */}
+                <MovieClick movieId={id} />
                 {/* Hero Section */}
                 <section
                     className="relative h-[65vh] rounded-2xl border border-neutral-900 bg-cover bg-center"

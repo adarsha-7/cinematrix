@@ -116,7 +116,7 @@ export default function Homepage() {
                 </section>
 
                 {!oneSecondPassed && (
-                    <div className="scrollbar-hide flex gap-6 overflow-x-auto py-3 pb-6">
+                    <div className="scrollbar-hide grid grid-cols-2 gap-6 py-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                         {Array.from({ length: 5 }).map((_, i) => (
                             <div key={i} className="h-75 w-55 animate-pulse rounded-2xl bg-zinc-800" />
                         ))}

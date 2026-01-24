@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
+    const [query, setQuery] = useState('');
     const router = useRouter();
 
     const { session, loading, error, refetch } = useAuth();
@@ -36,6 +37,12 @@ export default function Navbar() {
         await refetch();
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && query.trim() !== '') {
+            router.push(`/search?query=${encodeURIComponent(query)}`);
+        }
+    };
+
     return (
         <nav className="border-b border-neutral-800 bg-black">
             <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-3 sm:px-6 lg:gap-10 lg:px-8">
@@ -52,6 +59,9 @@ export default function Navbar() {
                         type="text"
                         placeholder="Search movies, TV shows..."
                         className="w-full rounded-3xl bg-neutral-200 py-2 pr-4 pl-11 text-sm font-semibold text-neutral-800 placeholder:text-neutral-400 focus:outline-none"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        onKeyDown={handleKeyDown}
                     />
                 </div>
 

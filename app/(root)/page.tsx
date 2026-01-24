@@ -49,7 +49,7 @@ export default function Homepage() {
     useEffect(() => {
         async function getRecommendedMovies() {
             try {
-                if (session) {
+                {
                     const res = await fetch(`${BASE_URL}/api/movies?sort=recommended&hideWatched=true&page=1`);
                     const { moviesData } = await res.json();
                     setRecommendedMovies(moviesData);
@@ -58,7 +58,7 @@ export default function Homepage() {
                 console.error('Error fetching movies', err);
             }
         }
-        getRecommendedMovies();
+        if (session) getRecommendedMovies();
     }, [session]);
 
     useEffect(() => {
@@ -82,9 +82,13 @@ export default function Homepage() {
     }
 
     const [oneSecondPassed, setOneSecondPassed] = useState<boolean>(false);
-    setTimeout(() => {
-        setOneSecondPassed(true);
-    }, 1000);
+    useEffect(() => {
+        {
+            setTimeout(() => {
+                setOneSecondPassed(true);
+            }, 1000);
+        }
+    }, []);
 
     return (
         <div>
@@ -182,14 +186,23 @@ export default function Homepage() {
                                 ))}
                         </div>
 
-                        <div className="mt-10 text-center">
-                            <button
-                                onClick={() => setShowAll(!showAll)}
-                                className="hover:border-primary cursor-pointer rounded border border-gray-600 px-6 py-2 transition hover:text-red-500"
-                            >
-                                {showAll ? 'Show Less' : 'View All'}
-                            </button>
-                        </div>
+                        {!loadingMovies && session && recommendedMovies && recommendedMovies.length == 0 && (
+                            <div className="mt-15 mb-25 flex justify-center align-middle">
+                                <p className="text-center text-lg">Browse and Rate Movies for Recommendations</p>
+                            </div>
+                        )}
+
+                        {!loadingMovies &&
+                            ((recommendedMovies && recommendedMovies.length != 0) || !recommendedMovies) && (
+                                <div className="mt-10 text-center">
+                                    <button
+                                        onClick={() => setShowAll(!showAll)}
+                                        className="hover:border-primary cursor-pointer rounded border border-gray-600 px-6 py-2 transition hover:text-red-500"
+                                    >
+                                        {showAll ? 'Show Less' : 'View All'}
+                                    </button>
+                                </div>
+                            )}
                     </section>
                 )}
 

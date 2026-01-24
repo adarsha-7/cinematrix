@@ -1,6 +1,8 @@
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { prisma } from '@/lib/prisma';
+import { emailOTP } from 'better-auth/plugins';
+import { sendMail } from '@/lib/mail';
 
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
@@ -8,6 +10,8 @@ export const auth = betterAuth({
     }),
     emailAndPassword: {
         enabled: true,
+        autoSignIn: false,
+        requireEmailVerification: true,
     },
     socialProviders: {
         google: {
@@ -17,4 +21,19 @@ export const auth = betterAuth({
             accessType: 'offline',
         },
     },
+    plugins: [
+        emailOTP({
+            sendVerificationOnSignUp: true,
+            overrideDefaultEmailVerification: true,
+            async sendVerificationOTP({ email, otp, type }) {
+                if (type == 'email-verification') {
+                    await sendMail(
+                        [{ email }],
+                        'E-mail Verification for Cinematrix',
+                        `Please use this OTP to verify your account for Cinematrix: ${otp}`,
+                    );
+                }
+            },
+        }),
+    ],
 });

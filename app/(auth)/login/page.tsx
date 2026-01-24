@@ -3,12 +3,24 @@
 import { useState, useEffect, ChangeEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { Eye, EyeOff, Film } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
 import { useAuth } from '@/context/AuthContext';
 import type { SignupForm } from '../../types';
 
 export default function LoginPage() {
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            const message = sessionStorage.getItem('toast');
+            if (message) {
+                toast.success(message, { duration: 5000 });
+                sessionStorage.removeItem('toast');
+            }
+        }, 100);
+        return () => clearTimeout(timer);
+    }, []);
+
     const router = useRouter();
     const { session } = useAuth();
     useEffect(() => {

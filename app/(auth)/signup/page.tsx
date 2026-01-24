@@ -32,7 +32,7 @@ export default function SignupPage() {
         const { name, email, password } = formData;
 
         await authClient.signUp.email(
-            { email, password, name: name, callbackURL: '/' },
+            { email, password, name, callbackURL: '/' },
             {
                 onRequest: () => {
                     setLoading(true);
@@ -40,8 +40,7 @@ export default function SignupPage() {
                 },
                 onSuccess: () => {
                     setLoading(false);
-                    sessionStorage.setItem('toast', 'Signed in successfully');
-                    router.push('/');
+                    router.push(`/verify-email?email=${encodeURIComponent(email)}`);
                 },
                 onError: (ctx) => {
                     setLoading(false);

@@ -4,7 +4,7 @@ import { useState, useEffect, ChangeEvent, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Upload } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import type { UserProfile } from '../types';
+import type { UserProfile } from '@/app/types';
 import { uploadImage } from '@/lib/upload-image';
 import { authClient } from '@/lib/auth-client';
 import { toast } from 'sonner';

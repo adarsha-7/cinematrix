@@ -62,12 +62,12 @@ export default async function MovieDetailsPage({ params }: { params: Promise<{ i
 
     return (
         <div>
-            <main className="pt-20">
+            <main className="pt-3">
                 {/*Store click interaction if user authenticated */}
                 <MovieClick movieId={id} />
                 {/* Hero Section */}
                 <section
-                    className="relative h-[65vh] rounded-2xl border border-neutral-900 bg-cover bg-center"
+                    className="relative h-[62vh] rounded-2xl border border-neutral-900 bg-cover bg-center"
                     style={
                         movieData.backdropPath
                             ? {

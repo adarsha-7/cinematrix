@@ -106,9 +106,9 @@ export default function TVShowpage() {
 
     return (
         <div>
-            <main className="mx-auto flex max-w-7xl flex-col py-16 pt-30">
-                <div className="flex flex-col gap-5">
-                    <h1 className="text-center text-4xl font-bold md:text-5xl">
+            <main className="mx-auto flex max-w-7xl flex-col py-16 pt-10">
+                <div className="flex flex-col gap-3">
+                    <h1 className="text-center text-4xl font-bold lg:text-[42px]">
                         Discover Your Favorite <span className="text-primary">TVShows</span> Like Never Before
                     </h1>
                     <p className="mx-auto mt-4 max-w-3xl text-center text-gray-400">

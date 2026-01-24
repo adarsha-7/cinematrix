@@ -25,10 +25,10 @@ export default async function TVShowDetailsPage({ params }: { params: { id: stri
 
     return (
         <div>
-            <main className="pt-20">
+            <main className="pt-3">
                 {/* Hero Section */}
                 <section
-                    className="relative h-[65vh] rounded-2xl border border-neutral-900 bg-cover bg-center"
+                    className="relative h-[62vh] rounded-2xl border border-neutral-900 bg-cover bg-center"
                     style={
                         tvShowData.backdropPath
                             ? {

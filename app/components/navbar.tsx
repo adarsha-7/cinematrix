@@ -85,7 +85,7 @@ export default function Navbar() {
                         </button>
 
                         {open && (
-                            <div className="absolute right-0 mt-6 w-36 rounded-sm bg-neutral-900 py-1 shadow-lg ring-1 ring-neutral-800">
+                            <div className="absolute right-0 z-10 mt-5 w-36 rounded-sm bg-neutral-900 py-1 shadow-lg ring-1 ring-neutral-800">
                                 {session && (
                                     <Link
                                         href="/user-profile"
@@ -95,6 +95,14 @@ export default function Navbar() {
                                         Profile
                                     </Link>
                                 )}
+                                {session && (
+                                    <button
+                                        className="text-primary block w-full cursor-pointer px-4 py-2 text-left text-sm hover:bg-neutral-800"
+                                        onClick={() => signOut()}
+                                    >
+                                        Sign out
+                                    </button>
+                                )}
                                 {!session && (
                                     <Link
                                         href="/login"
@@ -103,14 +111,6 @@ export default function Navbar() {
                                     >
                                         Sign in
                                     </Link>
-                                )}
-                                {session && (
-                                    <button
-                                        className="w-full cursor-pointer px-4 py-2 text-left text-sm text-red-400 hover:bg-neutral-800"
-                                        onClick={() => signOut()}
-                                    >
-                                        Sign out
-                                    </button>
                                 )}
                             </div>
                         )}

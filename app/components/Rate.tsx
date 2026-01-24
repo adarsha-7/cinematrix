@@ -99,7 +99,9 @@ export default function RateSection({ id, type }: { id: string; type: 'movie' | 
 
     return (
         <div>
-            <h2 className="mb-3 text-2xl font-semibold">{userRating ? 'Your Rating' : 'Rate This Movie'}</h2>
+            <h2 className="mb-3 text-2xl font-semibold">
+                {userRating ? 'Your Rating' : type == 'movie' ? 'Rate This Movie' : 'Rate This TV Show'}
+            </h2>
 
             {session ? (
                 <button

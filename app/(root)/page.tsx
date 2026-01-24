@@ -92,7 +92,7 @@ export default function Homepage() {
 
     return (
         <div>
-            <main className="pt-20">
+            <main className="pt-5">
                 <section className="relative flex h-[50vh] items-center justify-center text-center">
                     <div className="bg-liner-to-b absolute inset-0 from-black/10 via-black/5 to-transparent"></div>
                     <img src="/hero.png" alt="Hero" className="relative max-h-[100%] w-auto opacity-70" />

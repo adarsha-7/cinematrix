@@ -8,16 +8,14 @@ const REC_API_KEY = process.env.REC_API_KEY;
 
 const REC_REFRESH_ON = 5;
 
-function getInteractionWeight(type: 'CLICK' | 'WATCHLIST' | 'SEARCH' | 'RATED', value?: number): number {
+function getInteractionWeight(type: 'CLICK' | 'WATCHLIST' | 'RATED', value?: number): number {
     switch (type) {
         case 'RATED':
             return value ? 0.1 * value * 2.5 : 0;
         case 'WATCHLIST':
             return 1;
-        case 'SEARCH':
-            return 0.5;
         case 'CLICK':
-            return 0.25;
+            return 0.5;
         default:
             return 0;
     }
@@ -37,7 +35,7 @@ export async function POST(req: NextRequest) {
     if (
         typeof movieId !== 'number' ||
         !type ||
-        (type !== 'CLICK' && type !== 'SEARCH' && type !== 'RATED' && type !== 'WATCHLIST') ||
+        (type !== 'CLICK' && type !== 'RATED' && type !== 'WATCHLIST') ||
         (type === 'RATED' && typeof value !== 'number')
     ) {
         return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });

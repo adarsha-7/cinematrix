@@ -65,22 +65,6 @@ export default function Homepage() {
         if (!session) setRecommendedMovies(null);
     }, [session]);
 
-    // api call on interaction and session exists
-    async function saveInteraction(movieId: string, type: string, value?: number) {
-        try {
-            const res = await fetch(`${BASE_URL}/api/interaction`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    movieId,
-                    type,
-                    value,
-                }),
-            });
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
     const [oneSecondPassed, setOneSecondPassed] = useState<boolean>(false);
     useEffect(() => {
         {

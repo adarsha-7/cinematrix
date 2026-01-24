@@ -518,7 +518,6 @@ model WatchlistTVShow {
 enum InteractionType {
   CLICK
   WATCHLIST
-  SEARCH
   RATED
 }
 

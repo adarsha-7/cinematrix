@@ -59,28 +59,28 @@ export async function POST(req: NextRequest) {
             },
         });
     } catch (err) {
+        console.error(err);
         return NextResponse.json({ error: 'Failed to store interaction' }, { status: 500 });
     }
 
     const weight = getInteractionWeight(type, value);
-    let N = 0;
-    try {
-        const updatedUser = await prisma.user.update({
-            where: { id: session.user.id },
-            data: {
-                interactionCount: {
-                    increment: weight,
-                },
-            },
-            select: { interactionCount: true },
-        });
-        N = updatedUser.interactionCount;
-    } catch (err) {
-        return NextResponse.json({ error: 'Failed to update interaction count' }, { status: 500 });
-    }
 
-    if (N >= REC_REFRESH_ON) {
-        try {
+    try {
+        await prisma.$transaction(async (tx) => {
+            const user = await tx.user.update({
+                where: { id: session.user.id },
+                data: {
+                    interactionCount: {
+                        increment: weight,
+                    },
+                },
+                select: { interactionCount: true },
+            });
+
+            if (user.interactionCount < REC_REFRESH_ON) {
+                return;
+            }
+
             const res = await fetch(`${REC_API_BASE_URL}/recommend`, {
                 method: 'POST',
                 headers: {
@@ -98,18 +98,13 @@ export async function POST(req: NextRequest) {
 
             const { recommendations } = await res.json();
 
-            await prisma.userMovieRecommendations.upsert({
+            await tx.userMovieRecommendations.upsert({
                 where: { userId: session.user.id },
-                update: {
-                    recommendations,
-                },
-                create: {
-                    userId: session.user.id,
-                    recommendations,
-                },
+                update: { recommendations },
+                create: { userId: session.user.id, recommendations },
             });
 
-            await prisma.user.update({
+            await tx.user.update({
                 where: { id: session.user.id },
                 data: {
                     interactionCount: {
@@ -117,9 +112,10 @@ export async function POST(req: NextRequest) {
                     },
                 },
             });
-        } catch (err) {
-            return NextResponse.json({ error: 'Failed to refresh recommendations' }, { status: 500 });
-        }
+        });
+    } catch (err) {
+        console.error(err);
+        return NextResponse.json({ error: 'Failed to update interaction / refresh recommendations' }, { status: 500 });
     }
 
     return NextResponse.json({

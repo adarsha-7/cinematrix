@@ -53,12 +53,12 @@ export default function Navbar() {
                     <span className="hidden font-semibold tracking-wide text-white md:flex">CineMatrix</span>
                 </Link>
 
-                <div className="relative w-full max-w-md">
+                <div className="relative ml-5 w-full max-w-md md:ml-12">
                     <Search className="absolute top-1/2 left-3 w-4 -translate-y-1/2 text-neutral-400" />
                     <input
                         type="text"
                         placeholder="Search movies, TV shows..."
-                        className="w-full rounded-3xl bg-neutral-200 py-2 pr-4 pl-11 text-sm font-semibold text-neutral-800 placeholder:text-neutral-400 focus:outline-none"
+                        className="h-8 w-full rounded-3xl bg-neutral-800 py-2 pr-4 pl-11 text-[14px] font-medium text-neutral-400 placeholder:text-neutral-500 focus:outline-none"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         onKeyDown={handleKeyDown}

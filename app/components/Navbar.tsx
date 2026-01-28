@@ -53,7 +53,7 @@ export default function Navbar() {
                     <span className="hidden font-semibold tracking-wide text-white md:flex">CineMatrix</span>
                 </Link>
 
-                <div className="relative ml-4 w-full max-w-md md:ml-12">
+                <div className="relative ml-4 w-full max-w-md md:ml-8">
                     <Search className="absolute top-1/2 left-3 w-4 -translate-y-1/2 text-neutral-400" />
                     <input
                         type="text"

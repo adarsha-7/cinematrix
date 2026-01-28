@@ -1,4 +1,5 @@
 {
     "prismaERDPreviewer.preferredTheme": "dark",
-    "dbmlERDPreviewer.preferredTheme": "light"
+    "dbmlERDPreviewer.preferredTheme": "light",
+    "typescript.tsdk": "node_modules\\typescript\\lib"
 }

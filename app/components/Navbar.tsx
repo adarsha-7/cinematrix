@@ -45,12 +45,10 @@ export default function Navbar() {
 
     return (
         <nav className="border-b border-neutral-800 bg-black">
-            <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-3 sm:px-6 lg:gap-10 lg:px-8">
-                <Link href="/" className="flex items-center gap-2">
-                    <span className="bg-primary rounded p-1.5">
-                        <Film className="h-5 w-5 text-white" />
-                    </span>
-                    <span className="hidden font-semibold tracking-wide text-white md:flex">CineMatrix</span>
+            <div className="mx-auto flex h-15 max-w-7xl items-center justify-between gap-6 px-4 py-3 sm:px-6 lg:gap-10 lg:px-8">
+                <Link href="/" className="flex items-center gap-1">
+                    <img src="/logo.png" className="h-9 w-9" alt="logo" />
+                    <span className="hidden font-semibold tracking-wide text-white md:flex">Cinematrix</span>
                 </Link>
 
                 <div className="relative ml-4 w-full max-w-md md:ml-8">

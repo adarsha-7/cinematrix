@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Play } from 'lucide-react';
+import { Clapperboard, Tv } from 'lucide-react';
 import MovieCard from '@/app/components/MovieCard';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
@@ -90,12 +90,12 @@ export default function Homepage() {
                         <div className="mt-6 flex justify-center gap-4">
                             <Link href="/movies">
                                 <button className="bg-primary hover:bg-primary-hover flex cursor-pointer items-center gap-2 rounded-md px-5 py-2 text-sm md:text-base">
-                                    <Play size={16} /> Movies
+                                    <Clapperboard size={16} /> Movies
                                 </button>
                             </Link>
                             <Link href="/tv-shows">
                                 <button className="bg-primary hover:bg-primary-hover flex cursor-pointer items-center gap-2 rounded-md px-5 py-2 text-sm md:text-base">
-                                    <Play size={16} /> TV Shows
+                                    <Tv size={16} /> TV Shows
                                 </button>
                             </Link>
                         </div>

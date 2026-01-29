@@ -151,6 +151,7 @@ export default function Moviepage() {
                         options={['recommended', 'popular', 'newest', 'oldest']}
                         selectedOption={sort}
                         setSelectedOption={setSort}
+                        key={pathname}
                     ></Select>
                     {movies?.length != 0 && (
                         <label className="mt-6 flex cursor-pointer items-center gap-3 text-sm">

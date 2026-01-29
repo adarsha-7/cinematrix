@@ -23,11 +23,7 @@ export default function Select({ options, selectedOption, setSelectedOption }: s
                             <ListboxOption
                                 key={option}
                                 value={option}
-                                className={({ active, selected }) =>
-                                    `cursor-pointer px-5 py-2 transition ${
-                                        active ? 'bg-gray-800' : selected ? 'bg-gray-800 text-white' : 'text-gray-200'
-                                    }`
-                                }
+                                className="group data-focus:bg-primary relative cursor-default py-2 pr-9 pl-3 text-white select-none data-focus:outline-hidden"
                             >
                                 {capitalize(option)}
                             </ListboxOption>

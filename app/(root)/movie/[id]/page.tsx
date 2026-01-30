@@ -35,25 +35,23 @@ export default async function MovieDetailsPage({ params }: { params: Promise<{ i
                 },
             });
 
-            await Promise.all([
-                prisma.userInteractionMovies.create({
-                    data: {
-                        userId: session.user.id,
-                        movieId: Number(id),
-                        type: 'CLICK',
-                    },
-                }),
+            await prisma.userInteractionMovies.create({
+                data: {
+                    userId: session.user.id,
+                    movieId: Number(id),
+                    type: 'CLICK',
+                },
+            });
 
-                prisma.user.update({
-                    where: { id: session.user.id },
-                    data: {
-                        interactionCount: {
-                            increment: 0.25,
-                        },
+            await prisma.user.update({
+                where: { id: session.user.id },
+                data: {
+                    interactionCount: {
+                        increment: 0.5,
                     },
-                    select: { interactionCount: true },
-                }),
-            ]);
+                },
+                select: { interactionCount: true },
+            });
         } catch (err) {
             console.error('Failed to save interaction', err);
         }
@@ -63,9 +61,6 @@ export default async function MovieDetailsPage({ params }: { params: Promise<{ i
     return (
         <div>
             <main className="pt-3">
-                {/*Store click interaction if user authenticated */}
-                <MovieClick movieId={id} />
-                {/* Hero Section */}
                 <section
                     className="relative h-[62vh] rounded-2xl border border-neutral-900 bg-cover bg-center"
                     style={
@@ -122,7 +117,6 @@ export default async function MovieDetailsPage({ params }: { params: Promise<{ i
                         </div>
                     </div>
                 </section>
-
                 {/* Details Section */}
                 <section className="mx-auto flex flex-col gap-10 px-1 py-10">
                     {/* Synopsis */}

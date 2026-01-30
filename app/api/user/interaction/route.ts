@@ -66,52 +66,50 @@ export async function POST(req: NextRequest) {
     const weight = getInteractionWeight(type, value);
 
     try {
-        await prisma.$transaction(async (tx) => {
-            const user = await tx.user.update({
-                where: { id: session.user.id },
-                data: {
-                    interactionCount: {
-                        increment: weight,
-                    },
+        const user = await prisma.user.update({
+            where: { id: session.user.id },
+            data: {
+                interactionCount: {
+                    increment: weight,
                 },
-                select: { interactionCount: true },
-            });
+            },
+            select: { interactionCount: true },
+        });
 
-            if (user.interactionCount < REC_REFRESH_ON) {
-                return;
-            }
+        if (user.interactionCount < REC_REFRESH_ON) {
+            return NextResponse.json({ message: 'Stored interaction successfully' });
+        }
 
-            const res = await fetch(`${REC_API_BASE_URL}/recommend`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'api-key': REC_API_KEY || '',
+        const res = await fetch(`${REC_API_BASE_URL}/recommend`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'api-key': REC_API_KEY || '',
+            },
+            body: JSON.stringify({
+                userId: session.user.id,
+            }),
+        });
+
+        if (!res.ok) {
+            throw new Error('Recommendation API failed');
+        }
+
+        const { recommendations } = await res.json();
+
+        await prisma.userMovieRecommendations.upsert({
+            where: { userId: session.user.id },
+            update: { recommendations },
+            create: { userId: session.user.id, recommendations },
+        });
+
+        await prisma.user.update({
+            where: { id: session.user.id },
+            data: {
+                interactionCount: {
+                    decrement: REC_REFRESH_ON,
                 },
-                body: JSON.stringify({
-                    userId: session.user.id,
-                }),
-            });
-
-            if (!res.ok) {
-                throw new Error('Recommendation API failed');
-            }
-
-            const { recommendations } = await res.json();
-
-            await tx.userMovieRecommendations.upsert({
-                where: { userId: session.user.id },
-                update: { recommendations },
-                create: { userId: session.user.id, recommendations },
-            });
-
-            await tx.user.update({
-                where: { id: session.user.id },
-                data: {
-                    interactionCount: {
-                        decrement: REC_REFRESH_ON,
-                    },
-                },
-            });
+            },
         });
     } catch (err) {
         console.error(err);
@@ -119,7 +117,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({
-        message: 'stored interaction successfully',
+        message: 'Stored interaction successfully',
     });
 }
 

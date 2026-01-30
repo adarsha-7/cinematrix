@@ -164,18 +164,25 @@ export async function GET(req: NextRequest) {
 
         if (sort === 'recommended') {
             moviesData = session ? await getRecommendedMovies(page, genres, hideWatched, session.user.id) : [];
+            return NextResponse.json(
+                { moviesData },
+                {
+                    headers: {
+                        'Cache-Control': 'public, s-maxage=120, stale-while-revalidate=180',
+                    },
+                },
+            );
         } else {
             moviesData = await getMovies(page, genres, sort, hideWatched, session?.user.id);
-        }
-
-        return NextResponse.json(
-            { moviesData },
-            {
-                headers: {
-                    'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200',
+            return NextResponse.json(
+                { moviesData },
+                {
+                    headers: {
+                        'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=172800',
+                    },
                 },
-            },
-        );
+            );
+        }
     } catch (err) {
         console.error('Error fetching movies:', err);
         return NextResponse.json({ message: 'Internal server error' }, { status: 500 });

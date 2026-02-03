@@ -40,5 +40,9 @@ export async function GET(req: NextRequest) {
         createdAt: r.createdAt,
     }));
 
-    return NextResponse.json(formattedRatings);
+    const sortedRatings = formattedRatings.sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+
+    return NextResponse.json(sortedRatings);
 }

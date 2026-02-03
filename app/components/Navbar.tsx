@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Film, Search, LayoutList, User } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { authClient } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -15,6 +15,20 @@ export default function Navbar() {
 
     const { session, loading, error, refetch } = useAuth();
     const user = session?.user || null;
+
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     const signOut = async () => {
         let toastId: string | number;
@@ -93,7 +107,10 @@ export default function Navbar() {
                         </button>
 
                         {open && (
-                            <div className="absolute right-0 z-10 mt-5 w-36 rounded-sm bg-neutral-900 py-1 shadow-lg ring-1 ring-neutral-800">
+                            <div
+                                ref={dropdownRef}
+                                className="absolute right-0 z-10 mt-5 w-36 rounded-sm bg-neutral-900 py-1 shadow-lg ring-1 ring-neutral-800"
+                            >
                                 {session && (
                                     <Link
                                         href="/ratings"

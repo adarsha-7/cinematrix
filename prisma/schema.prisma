@@ -498,6 +498,8 @@ model WatchlistMovie {
   movie   Movie @relation(fields: [movieId], references: [id])
   movieId Int
 
+  createdAt DateTime @default(now())
+
   @@id([watchlistId, movieId])
 }
 
@@ -507,6 +509,8 @@ model WatchlistTVShow {
 
   tvShow   TVShow @relation(fields: [tvShowId], references: [id])
   tvShowId Int
+
+  createdAt DateTime @default(now())
 
   @@id([watchlistId, tvShowId])
 }

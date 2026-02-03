@@ -112,10 +112,36 @@ interface PaginationProps {
     onPageChange: (page: number) => void;
 }
 
-export type selectProps = {
-    options: string[];
-    selectedOption: string;
-    setSelectedOption: (value: string) => void;
-};
+interface MediaItem {
+    id: number;
+    title: string;
+}
 
-export type { Movie, Category, SignupForm, LoginForm, UserProfile, MovieData, TVShowData, PaginationProps };
+interface WatchlistItem {
+    id: number;
+    title: string;
+    type: 'movie' | 'tv';
+    createdAt: string;
+}
+
+interface Rating {
+    id: string;
+    movie: MediaItem | null;
+    tvShow: MediaItem | null;
+    rating: number;
+    createdAt: string;
+}
+
+export type {
+    Movie,
+    Category,
+    SignupForm,
+    LoginForm,
+    UserProfile,
+    MovieData,
+    TVShowData,
+    PaginationProps,
+    MediaItem,
+    WatchlistItem,
+    Rating,
+};

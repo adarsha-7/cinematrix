@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import TVShowCard from '@/app/components/TvShowCard';
+import TVShowCard from '@/app/components/TVShowCard';
 import Pagination from '@/app/components/Pagination';
 import Select from '@/app/components/Select';
 import { useAuth } from '@/context/AuthContext';

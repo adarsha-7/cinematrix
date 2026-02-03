@@ -96,6 +96,15 @@ export default function Navbar() {
                             <div className="absolute right-0 z-10 mt-5 w-36 rounded-sm bg-neutral-900 py-1 shadow-lg ring-1 ring-neutral-800">
                                 {session && (
                                     <Link
+                                        href="/ratings"
+                                        className="block cursor-pointer px-4 py-2 text-sm text-white hover:bg-neutral-800"
+                                        onClick={() => setOpen(false)}
+                                    >
+                                        Your Ratings
+                                    </Link>
+                                )}
+                                {session && (
+                                    <Link
                                         href="/user-profile"
                                         className="block cursor-pointer px-4 py-2 text-sm text-white hover:bg-neutral-800"
                                         onClick={() => setOpen(false)}

@@ -132,11 +132,11 @@ interface Rating {
     createdAt: string;
 }
 
-type selectProps = {
+interface selectProps {
     options: string[];
     selectedOption: string;
     setSelectedOption: (value: string) => void;
-};
+}
 
 export type {
     Movie,

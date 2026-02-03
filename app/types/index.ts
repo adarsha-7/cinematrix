@@ -132,6 +132,12 @@ interface Rating {
     createdAt: string;
 }
 
+type selectProps = {
+    options: string[];
+    selectedOption: string;
+    setSelectedOption: (value: string) => void;
+};
+
 export type {
     Movie,
     Category,
@@ -144,4 +150,5 @@ export type {
     MediaItem,
     WatchlistItem,
     Rating,
+    selectProps,
 };

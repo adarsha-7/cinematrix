@@ -1,6 +1,4 @@
 import { MailtrapClient } from 'mailtrap';
-import 'dotenv/config';
-import { availableMemory } from 'process';
 
 const TOKEN = process.env.MAILTRAP_API_KEY as string;
 

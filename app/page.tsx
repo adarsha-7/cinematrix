@@ -1,6 +1,6 @@
 import Navbar from './components/navbar';
 import CineMatrixNavbar from './components/navbar';
-import Homepage from './home/[id]/page';
+// import Homepage from './home/[id]/page';
 import LoginupPage from './Login/Loginpage';
 import SignupPage from './Signup/Signuppage';
 

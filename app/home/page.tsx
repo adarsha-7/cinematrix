@@ -149,7 +149,7 @@ export default function Homepage() {
                     </button>
                 </div>
             </section>
-            {/* Recommended (Horizontal Scroll) */}
+            {/* Recommended Horizontal Scroll */}
             <section className="mx-auto max-w-7xl px-4 py-16">
                 <h2 className="mb-2 text-center text-2xl font-bold">Recommended for you</h2>
                 <p className="mb-8 text-center text-sm text-gray-400">Discover the Recommended Movies in Cinematrix</p>

@@ -45,7 +45,7 @@ export default function WatchListPage() {
                 </header>
 
                 {watchlist.length === 0 ? (
-                    /* Empty State */
+                    
                     <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-zinc-800 py-20">
                         <p className="text-lg text-gray-500">Your watchlist is empty.</p>
                         <Link href="/home" className="mt-4 text-[#E11D48] hover:underline">
@@ -53,7 +53,7 @@ export default function WatchListPage() {
                         </Link>
                     </div>
                 ) : (
-                    /* Movie Grid */
+                    
                     <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                         {watchlist.map((movie) => (
                             <Link

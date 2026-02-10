@@ -8,11 +8,13 @@ export const auth = betterAuth({
     database: prismaAdapter(prisma, {
         provider: 'postgresql',
     }),
+
     emailAndPassword: {
         enabled: true,
         autoSignIn: false,
         requireEmailVerification: true,
     },
+
     socialProviders: {
         google: {
             clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -21,12 +23,14 @@ export const auth = betterAuth({
             accessType: 'offline',
         },
     },
+
     plugins: [
         emailOTP({
             sendVerificationOnSignUp: true,
             overrideDefaultEmailVerification: true,
+
             async sendVerificationOTP({ email, otp, type }) {
-                if (type == 'email-verification') {
+                if (type === 'email-verification') {
                     await sendMail(
                         [{ email }],
                         'E-mail Verification for Cinematrix',

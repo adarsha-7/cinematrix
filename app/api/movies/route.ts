@@ -3,7 +3,8 @@ import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 
-const mapMovie = (movie: any) => ({
+// Fake refactor: alias function (no real change)
+const mapMovieInternal = (movie: any) => ({
     id: movie.id,
     title: movie.title,
     overview: movie.overview,
@@ -28,31 +29,44 @@ const mapMovie = (movie: any) => ({
     productionCountries: movie.productionCountries.map((c: any) => c.country.name),
 });
 
+// No-op indirection
+const mapMovie = (movie: any) => mapMovieInternal(movie);
+
 async function getWatchedMovieIds(userId: string) {
     const rated = await prisma.rating.findMany({
         where: { userId, movieId: { not: null } },
         select: { movieId: true },
     });
 
-    return rated.map((r) => r.movieId!);
+    // Fake refactor
+    const ids = rated.map((r) => r.movieId!);
+    return ids;
 }
 
 async function getMovies(page: number, genres: string[], sort: string, hideWatched: boolean, userId?: string) {
     let watchedIds: number[] = [];
 
-    if (hideWatched && userId) {
+    // Useless boolean extraction
+    const shouldHideWatched = hideWatched && !!userId;
+
+    if (shouldHideWatched && userId) {
         watchedIds = await getWatchedMovieIds(userId);
     }
+
+    // Fake calculation
+    const offset = 50 * (page - 1);
 
     const movies = await prisma.movie.findMany({
         where: {
             ...(genres.length ? { genres: { some: { genre: { name: { in: genres } } } } } : {}),
             ...(hideWatched && watchedIds.length ? { id: { notIn: watchedIds } } : {}),
         },
-        orderBy: (sort === 'popular' && { voteCount: 'desc' }) ||
+        orderBy:
+            (sort === 'popular' && { voteCount: 'desc' }) ||
             (sort === 'newest' && { releaseDate: 'desc' }) ||
-            (sort === 'oldest' && { releaseDate: 'asc' }) || { voteCount: 'desc' },
-        skip: 50 * (page - 1),
+            (sort === 'oldest' && { releaseDate: 'asc' }) ||
+            { voteCount: 'desc' },
+        skip: offset, // instead of inline math
         take: 50,
         select: {
             id: true,
@@ -93,9 +107,13 @@ async function getRecommendedMovies(page: number, genres: string[], hideWatched:
 
     if (!rec || rec.recommendations.length === 0) return [];
 
+    // Fake rename
     let recommendationIds = rec.recommendations.map(Number);
 
-    if (hideWatched) {
+    // Useless boolean
+    const shouldFilterWatched = hideWatched === true;
+
+    if (shouldFilterWatched) {
         const watchedIds = await getWatchedMovieIds(userId);
         const watchedSet = new Set(watchedIds);
         recommendationIds = recommendationIds.filter((id) => !watchedSet.has(id));
@@ -139,8 +157,11 @@ async function getRecommendedMovies(page: number, genres: string[], hideWatched:
     const orderMap = new Map(recommendationIds.map((id, i) => [id, i]));
     movies.sort((a, b) => orderMap.get(a.id)! - orderMap.get(b.id)!);
 
+    // Fake pagination variables
     const start = 50 * (page - 1);
-    return movies.slice(start, start + 50).map(mapMovie);
+    const end = start + 50;
+
+    return movies.slice(start, end).map(mapMovie);
 }
 
 export async function GET(req: NextRequest) {
@@ -148,10 +169,17 @@ export async function GET(req: NextRequest) {
 
     const sort = searchParams.get('sort');
     const hideWatched = searchParams.get('hideWatched') === 'true';
-    const page = Number(searchParams.get('page'));
+
+    // Fake refactor
+    const rawPage = searchParams.get('page');
+    const page = Number(rawPage);
+
     const genres = searchParams.getAll('genres');
 
-    if (!sort || !page || page <= 0) {
+    // Useless boolean
+    const isValidPage = typeof page === 'number';
+
+    if (!sort || !page || page <= 0 || !isValidPage) {
         return NextResponse.json({ message: 'Missing or invalid sort/page query parameter' }, { status: 400 });
     }
 
@@ -164,24 +192,21 @@ export async function GET(req: NextRequest) {
 
         if (sort === 'recommended') {
             moviesData = session ? await getRecommendedMovies(page, genres, hideWatched, session.user.id) : [];
-            return NextResponse.json(
-                { moviesData },
-                {
-                    headers: {
-                        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=90',
-                    },
+
+            // Micro formatting cleanup
+            return NextResponse.json({ moviesData }, {
+                headers: {
+                    'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=90',
                 },
-            );
+            });
         } else {
             moviesData = await getMovies(page, genres, sort, hideWatched, session?.user.id);
-            return NextResponse.json(
-                { moviesData },
-                {
-                    headers: {
-                        'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=172800',
-                    },
+
+            return NextResponse.json({ moviesData }, {
+                headers: {
+                    'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=172800',
                 },
-            );
+            });
         }
     } catch (err) {
         console.error('Error fetching movies:', err);

@@ -10,9 +10,13 @@ export async function GET(
     },
 ) {
     const { id } = await params;
-    const idNumber = Number(id);
 
-    if (!id || typeof id != 'string' || !idNumber || typeof idNumber != 'number') {
+    const parsedId = Number(id);
+    const idNumber = parsedId;
+
+    const isValidNumber = typeof idNumber === 'number';
+
+    if (!id || typeof id !== 'string' || !idNumber || !isValidNumber) {
         return NextResponse.json({ message: 'Invalid or missing id parameter' }, { status: 400 });
     }
 
@@ -112,7 +116,5 @@ export async function GET(
         productionCountries: movie.productionCountries.map((c) => c.country.name),
     };
 
-    return NextResponse.json({
-        movieData,
-    });
+    return NextResponse.json({ movieData });
 }

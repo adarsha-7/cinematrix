@@ -10,14 +10,17 @@ export async function GET(
     },
 ) {
     const { id } = await params;
-    const idNumber = Number(id);
+    const movieId = Number(id);
 
-    if (!id || typeof id != 'string' || !idNumber || typeof idNumber != 'number') {
-        return NextResponse.json({ message: 'Invalid or missing id parameter' }, { status: 400 });
+    if (!id || Number.isNaN(movieId)) {
+        return NextResponse.json(
+            { message: 'Invalid or missing id parameter' },
+            { status: 400 },
+        );
     }
 
     const movie = await prisma.movie.findUnique({
-        where: { id: idNumber },
+        where: { id: movieId },
         select: {
             id: true,
             title: true,
@@ -76,7 +79,10 @@ export async function GET(
     });
 
     if (!movie) {
-        return NextResponse.json({ message: 'Movie not found' }, { status: 404 });
+        return NextResponse.json(
+            { message: 'Movie not found' },
+            { status: 404 },
+        );
     }
 
     const movieData = {
@@ -94,25 +100,25 @@ export async function GET(
 
         director: movie.director[0]?.person.name ?? null,
 
-        cast: movie.cast.map((c) => ({
-            character: c.character,
-            castOrder: c.castOrder,
-            actor: c.person.name,
-            profilePath: c.person.profilePath,
+        cast: movie.cast.map((item) => ({
+            character: item.character,
+            castOrder: item.castOrder,
+            actor: item.person.name,
+            profilePath: item.person.profilePath,
         })),
 
         genres: movie.genres.map((g) => g.genre.name),
-
         keywords: movie.keywords.map((k) => k.keyword.name),
-
-        originalLanguages: movie.originalLanguages.map((l) => l.language.name),
-
-        productionCompanies: movie.productionCompanies.map((c) => c.company.name),
-
-        productionCountries: movie.productionCountries.map((c) => c.country.name),
+        originalLanguages: movie.originalLanguages.map(
+            (l) => l.language.name,
+        ),
+        productionCompanies: movie.productionCompanies.map(
+            (c) => c.company.name,
+        ),
+        productionCountries: movie.productionCountries.map(
+            (c) => c.country.name,
+        ),
     };
 
-    return NextResponse.json({
-        movieData,
-    });
+    return NextResponse.json({ movieData });
 }
